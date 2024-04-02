@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>EstateNexus - The Property Manager</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+        <!-- Libraries Stylesheet -->
+        <link href="../../../static/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+        <link href="../../../static/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="../../../static/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="../../../static/css/style.css" rel="stylesheet">
+        <link href="../../../static/css/passwords.css" rel="stylesheet">
+        <link href="../../../static/css/add-property.css" rel="stylesheet">
+
+    </head>
+
+    <body>
+
+        <!-- Spinner Start -->
+        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary" role="status"></div>
+        </div>
+        <!-- Spinner End -->
+
+
+       <!-- Navbar start -->
+        <div class="container-fluid fixed-top">
+            <div class="container topbar bg-primary d-none d-lg-block">
+                <div class="d-flex justify-content-between">
+                    <div class="top-info ps-2">
+                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">24 Westlands Rd,Nairobi</a></small>
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">estatenexus@gmail.com</a></small>
+                    </div>
+                    <div class="top-link pe-2">
+                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+                    </div>
+                </div>
+            </div>
+            <div class="container px-0">
+                <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                    <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">EstateNexus</h1></a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars text-primary"></span>
+                    </button>
+                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                        <div class="navbar-nav mx-auto">
+                            <a href="/" class="nav-item nav-link active">Home</a>
+                            <a href="{% url 'User:shop' %}" class="nav-item nav-link">Shop</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                                    <a href="{% url 'User:cart' %}" class="dropdown-item">Cart</a>
+                                    <a href="{% url 'User:checkout' %}" class="dropdown-item">Checkout</a>
+                                    <a href="{% url 'User:checkout' %}" class="dropdown-item">Testimonial</a>
+                                    <a href="{% url 'User:error' %}" class="dropdown-item">404 Page</a>
+                                    <a href="{% url 'User:about' %}" class="dropdown-item">About</a>
+                                    <a href="{% url 'User:access-denied' %}" class="dropdown-item">access-denied</a>
+                                    <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                                    <a href="{% url 'User:password_protected' %}" class="dropdown-item">Password protected page</a>
+                                    <a href="{% url 'User:replace-password' %}" class="dropdown-item">Replace password</a>
+                                    <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                                    <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                                    <a href="{% url 'User:user-account' %}" class="dropdown-item">User Account</a>
+                                </div>
+                            </div>
+                            <a href="{% url 'User:contact-page' %}" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <div class="d-flex m-3 me-0">
+                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                            <a href="#" class="position-relative me-4 my-auto">
+                                <i class="fa fa-shopping-bag fa-2x"></i>
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            </a>
+                            <a href="#" class="my-auto">
+                                <i class="fas fa-user fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Navbar End -->
+
+
+        <!-- Modal Search Start -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center">
+                        <div class="input-group w-75 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Search End -->
+
+
+        <!-- Single Page Header start -->
+        <div class="container-fluid page-header py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(../../../static/img/singleheader.jpg);">
+            <h1 class="text-center text-white display-6">Add Property Page</h1>
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item active text-white">Add Property</li>
+            </ol>
+        </div>
+        <!-- Single Page Header End -->
+
+
+        <!-- section Start -->
+        <div data-w-id="90ad130c-f96d-5208-440b-cdcb26af65df" data-wf-id="[&quot;90ad130c-f96d-5208-440b-cdcb26af65df&quot;]" class="section-about-header"><div data-w-id="7ad9e7f4-f783-1eb2-424b-778036b64fb8" data-wf-id="[&quot;7ad9e7f4-f783-1eb2-424b-778036b64fb8&quot;]" class="container-regular"><div data-w-id="7d4adb27-9758-978e-980d-92e7e419e860" data-wf-id="[&quot;7d4adb27-9758-978e-980d-92e7e419e860&quot;]" class="w-layout-grid about-header wf-grid" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div data-w-id="7d4adb27-9758-978e-980d-92e7e419e861" data-wf-id="[&quot;7d4adb27-9758-978e-980d-92e7e419e861&quot;]" class="header-content"><div data-w-id="0840baab-2a34-32e6-8aa1-feb865a8a2c7" data-wf-id="[&quot;0840baab-2a34-32e6-8aa1-feb865a8a2c7&quot;]" class="header-badge-white"><div data-w-id="0840baab-2a34-32e6-8aa1-feb865a8a2c8" data-wf-id="[&quot;0840baab-2a34-32e6-8aa1-feb865a8a2c8&quot;]" class="header-badge-light"><div data-w-id="0840baab-2a34-32e6-8aa1-feb865a8a2c9" data-wf-id="[&quot;0840baab-2a34-32e6-8aa1-feb865a8a2c9&quot;]">New</div></div><div data-w-id="0840baab-2a34-32e6-8aa1-feb865a8a2cb" data-wf-id="[&quot;0840baab-2a34-32e6-8aa1-feb865a8a2cb&quot;]">Special Dashboard For You To Manage Your Properties</div></div><h2 data-w-id="7d4adb27-9758-978e-980d-92e7e419e864" data-wf-id="[&quot;7d4adb27-9758-978e-980d-92e7e419e864&quot;]">EstateNexus is a website that enables users to manage their properties.</h2></div><p id="w-node-da83c76b-8582-bdfd-54ac-0c0749a4f522-3774ba23" data-w-id="da83c76b-8582-bdfd-54ac-0c0749a4f522" data-wf-id="[&quot;da83c76b-8582-bdfd-54ac-0c0749a4f522&quot;]" class="paragraph-regular text-color-white">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus pharetra cursus. Suspendisse sodales porta.</p></div><div data-w-id="3575c869-5e9d-fe78-2156-4b6da71c7f8a" data-wf-id="[&quot;3575c869-5e9d-fe78-2156-4b6da71c7f8a&quot;]" class="about-header-video-wrapper" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><a href="#" data-w-id="d48aea1f-19d5-09c2-4828-a19ec90ec9d9" data-wf-id="[&quot;d48aea1f-19d5-09c2-4828-a19ec90ec9d9&quot;]" class="about-video-lightbox w-lightbox" aria-label="open lightbox" aria-haspopup="dialog"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba83_Play%20Button%20icon.svg" loading="lazy" data-wf-id="[&quot;c81cd797-daa5-5ff5-6d7a-ac80a0316bcd&quot;]" data-w-id="c81cd797-daa5-5ff5-6d7a-ac80a0316bcd" alt="" class="icon-regular"><script type="application/json" class="w-json">{
+  "items": [
+    {
+      "_id": "example_img",
+      "origFileName": "Header Large Image.png",
+      "fileName": "Header Large Image.png",
+      "fileSize": 238234,
+      "height": 880,
+      "url": "https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/63337525695d8b977bb442cc_Header%20Large%20Image.png",
+      "width": 704,
+      "type": "image"
+    }
+  ],
+  "group": ""
+}</script></a></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd10" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd10&quot;]" class="w-layout-grid logo-grid wf-grid" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd11" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd11&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba6c_Grey%20Logo%20Large%20(2).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd12&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd12" alt=""></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd13" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd13&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba7e_Grey%20Logo%20Large%20(5).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd14&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd14" alt=""></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd15" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd15&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba7f_Grey%20Logo%20Large%20(4).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd16&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd16" alt=""></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd17" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd17&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba6a_Grey%20Logo%20Large%20(1).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd18&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd18" alt=""></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd19" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd19&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba7d_Grey%20Logo%20Large%20(3).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd1a&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd1a" alt=""></div><div data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd1b" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd1b&quot;]" class="logo-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba6b_Grey%20Logo%20Large%20(6).svg" loading="lazy" data-wf-id="[&quot;b8c27617-bf9b-8d16-fb35-a3c69f20fd1c&quot;]" data-w-id="b8c27617-bf9b-8d16-fb35-a3c69f20fd1c" alt=""></div></div></div><div data-w-id="5546e555-24a0-f73e-3077-6cea4357ecd9" data-wf-id="[&quot;5546e555-24a0-f73e-3077-6cea4357ecd9&quot;]" class="about-header-bg" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"></div></div>
+        
+        
+
+<div data-w-id="0d815ff2-1c9e-246b-bae2-4d3bd9086991" data-wf-id="[&quot;0d815ff2-1c9e-246b-bae2-4d3bd9086991&quot;]" class="section-regular"><div data-w-id="3d8d189f-114f-51e5-f69b-60e22c2b7a5d" data-wf-id="[&quot;3d8d189f-114f-51e5-f69b-60e22c2b7a5d&quot;]" class="about-content-background-color" style="opacity: 1; transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"></div><div data-w-id="7e2a9097-0df5-480d-feaa-ca0b2f67e425" data-wf-id="[&quot;7e2a9097-0df5-480d-feaa-ca0b2f67e425&quot;]" class="container-regular"><div data-w-id="a8392e85-b981-398e-da1b-a314d3d41acc" data-wf-id="[&quot;a8392e85-b981-398e-da1b-a314d3d41acc&quot;]" class="w-layout-grid about-content-grid wf-grid"><div id="w-node-ccd3efc2-503c-f97e-8ccc-38934be51f5a-3774ba23" data-w-id="ccd3efc2-503c-f97e-8ccc-38934be51f5a" data-wf-id="[&quot;ccd3efc2-503c-f97e-8ccc-38934be51f5a&quot;]" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div data-w-id="3a464a9d-6e3c-b5eb-e9b4-1b4224bedb3e" data-wf-id="[&quot;3a464a9d-6e3c-b5eb-e9b4-1b4224bedb3e&quot;]" class="margin-bottom-12"><div data-w-id="c4d90a83-a861-9fe3-62c4-6bc3d4dfa53e" data-wf-id="[&quot;c4d90a83-a861-9fe3-62c4-6bc3d4dfa53e&quot;]" class="detail text-color-primary">about EstateNexus</div></div><div data-w-id="821cd26f-cd1b-ef1a-2d49-7064995688e4" data-wf-id="[&quot;821cd26f-cd1b-ef1a-2d49-7064995688e4&quot;]" class="margin-bottom-24"><h3 data-w-id="229885b6-dff0-a213-7e53-ca6b3ea3712b" data-wf-id="[&quot;229885b6-dff0-a213-7e53-ca6b3ea3712b&quot;]">Who is<br data-w-id="145a12ee-c2b7-cf2a-9a69-ed1ca15ddbca" data-wf-id="[&quot;145a12ee-c2b7-cf2a-9a69-ed1ca15ddbca&quot;,&quot;LineBreak&quot;]">our audience?</h3></div><p data-w-id="19f06f33-2c3e-4cab-fbf0-96389deea01b" data-wf-id="[&quot;19f06f33-2c3e-4cab-fbf0-96389deea01b&quot;]" class="paragraph-regular">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus pharetra cursus. Suspendisse sodales porta leo, ac placerat ex pretium quis.</p><div data-w-id="fbbb5caf-8978-b7e2-b889-6b76ab3c44e2" data-wf-id="[&quot;fbbb5caf-8978-b7e2-b889-6b76ab3c44e2&quot;]" class="about-content-list-wrapper"><div data-w-id="3d6e5797-06e6-b4f9-cc31-99764c4c4910" data-wf-id="[&quot;3d6e5797-06e6-b4f9-cc31-99764c4c4910&quot;]" class="about-content-list-item"><div data-w-id="5d8cf160-5ac1-c67e-07db-2cffab4dfdc9" data-wf-id="[&quot;5d8cf160-5ac1-c67e-07db-2cffab4dfdc9&quot;]" class="icon-regular w-embed"><svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path stroke-width="2" stroke="#D4D3F4" d="M19 12C19 13.4776 18.5324 14.9173 17.6642 16.113C16.796 17.3086 15.5717 18.1989 14.1667 18.6562C12.7616 19.1136 11.2479 19.1146 9.84223 18.6591C8.43657 18.2037 7.21109 17.315 6.34129 16.1206C5.47149 14.9261 5.00198 13.487 5.00001 12.0094C4.99803 10.5318 5.46368 9.09141 6.33028 7.8946C7.19688 6.69779 8.41998 5.80591 9.82441 5.34667C11.2289 4.88743 12.7426 4.88439 14.1489 5.33799"></path>
+<path stroke-width="2" stroke="#4640DE" d="M9 11L12 14L19 7"></path>
+</svg></div><div data-w-id="06c41891-b98c-2336-2091-3e1cc363a565" data-wf-id="[&quot;06c41891-b98c-2336-2091-3e1cc363a565&quot;]" class="paragraph-regular">Add your feature here</div></div><div data-w-id="2a572c91-032a-ca37-f5d3-c9c2d824a766" data-wf-id="[&quot;2a572c91-032a-ca37-f5d3-c9c2d824a766&quot;]" class="about-content-list-item"><div data-w-id="2a572c91-032a-ca37-f5d3-c9c2d824a767" data-wf-id="[&quot;2a572c91-032a-ca37-f5d3-c9c2d824a767&quot;]" class="icon-regular w-embed"><svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path stroke-width="2" stroke="#D4D3F4" d="M19 12C19 13.4776 18.5324 14.9173 17.6642 16.113C16.796 17.3086 15.5717 18.1989 14.1667 18.6562C12.7616 19.1136 11.2479 19.1146 9.84223 18.6591C8.43657 18.2037 7.21109 17.315 6.34129 16.1206C5.47149 14.9261 5.00198 13.487 5.00001 12.0094C4.99803 10.5318 5.46368 9.09141 6.33028 7.8946C7.19688 6.69779 8.41998 5.80591 9.82441 5.34667C11.2289 4.88743 12.7426 4.88439 14.1489 5.33799"></path>
+<path stroke-width="2" stroke="#4640DE" d="M9 11L12 14L19 7"></path>
+</svg></div><div data-w-id="2a572c91-032a-ca37-f5d3-c9c2d824a768" data-wf-id="[&quot;2a572c91-032a-ca37-f5d3-c9c2d824a768&quot;]" class="paragraph-regular">Add your feature here</div></div></div></div><div data-w-id="beb7038e-1484-b02d-5171-8f7827b14975" data-wf-id="[&quot;beb7038e-1484-b02d-5171-8f7827b14975&quot;]" class="w-layout-grid about-content-image-grid wf-grid" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div id="w-node-_891a2e3c-8db2-7181-d35a-5580af89f693-3774ba23" data-w-id="891a2e3c-8db2-7181-d35a-5580af89f693" data-wf-id="[&quot;891a2e3c-8db2-7181-d35a-5580af89f693&quot;]" class="about-content-image-bottom-left"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba86_About%20Page%20Image%20(4).webp" loading="lazy" data-wf-id="[&quot;5d0089f8-8183-ac45-04bc-a4b4283492c6&quot;]" data-w-id="5d0089f8-8183-ac45-04bc-a4b4283492c6" alt="" id="w-node-_5d0089f8-8183-ac45-04bc-a4b4283492c6-3774ba23" class="image-cover"></div><div id="w-node-_36ecdbfe-7139-4220-d685-0caadfd024e2-3774ba23" data-w-id="36ecdbfe-7139-4220-d685-0caadfd024e2" data-wf-id="[&quot;36ecdbfe-7139-4220-d685-0caadfd024e2&quot;]" class="about-content-image-top-right"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba81_About%20Page%20Image%20(3).webp" loading="lazy" data-wf-id="[&quot;36ecdbfe-7139-4220-d685-0caadfd024e3&quot;]" data-w-id="36ecdbfe-7139-4220-d685-0caadfd024e3" alt="" id="w-node-_36ecdbfe-7139-4220-d685-0caadfd024e3-3774ba23" class="image-cover"></div><div id="w-node-_830f4ea9-6d21-fe97-64e4-cf7f5edfa5c6-3774ba23" data-w-id="830f4ea9-6d21-fe97-64e4-cf7f5edfa5c6" data-wf-id="[&quot;830f4ea9-6d21-fe97-64e4-cf7f5edfa5c6&quot;]"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba88_About%20Page%20Image%20(2).webp" loading="lazy" data-wf-id="[&quot;9ba46cdd-2744-d3fc-6a8e-b0f470ad3fd8&quot;]" data-w-id="9ba46cdd-2744-d3fc-6a8e-b0f470ad3fd8" alt="" class="image-cover"></div></div></div></div></div>
+
+
+<div data-w-id="aab127e7-388b-a21e-2ed9-f8c38f48446f" data-wf-id="[&quot;aab127e7-388b-a21e-2ed9-f8c38f48446f&quot;]" class="section-regular"><div data-w-id="aab127e7-388b-a21e-2ed9-f8c38f484470" data-wf-id="[&quot;aab127e7-388b-a21e-2ed9-f8c38f484470&quot;]" class="container-regular"><div data-w-id="04fdb74d-33c9-b477-a3a1-f30fc534148f" data-wf-id="[&quot;04fdb74d-33c9-b477-a3a1-f30fc534148f&quot;]" class="title-wrap-center max-width-450" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div data-w-id="205967f2-b46a-9cc4-4e8c-221d82ac0f5d" data-wf-id="[&quot;205967f2-b46a-9cc4-4e8c-221d82ac0f5d&quot;]" class="margin-bottom-12"><div data-w-id="205967f2-b46a-9cc4-4e8c-221d82ac0f5e" data-wf-id="[&quot;205967f2-b46a-9cc4-4e8c-221d82ac0f5e&quot;]" class="detail text-color-primary">about EstateNexus</div></div><div data-w-id="a0845340-9c36-592e-8a7d-4ca946b6578a" data-wf-id="[&quot;a0845340-9c36-592e-8a7d-4ca946b6578a&quot;]" class="margin-bottom-24"><h3 data-w-id="08dee1fc-006f-c851-3e2f-a824c8afd1f2" data-wf-id="[&quot;08dee1fc-006f-c851-3e2f-a824c8afd1f2&quot;]">Our Team</h3></div><p data-w-id="d1829af9-d51b-bc63-2a9b-210ebda324f6" data-wf-id="[&quot;d1829af9-d51b-bc63-2a9b-210ebda324f6&quot;]" class="paragraph-regular">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rhoncus pharetra cursus. Suspendisse sodales porta leo, ac placerat ex pretium quis.</p></div><div data-w-id="64e2202d-fb29-c003-d547-fd497a14ed0a" data-wf-id="[&quot;64e2202d-fb29-c003-d547-fd497a14ed0a&quot;]" class="w-layout-grid about-team-image-grid wf-grid" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba85_About%20Page%20Image%20(6).webp" loading="lazy" data-wf-id="[&quot;8d2cf6e8-2f20-9910-5cf6-825a2a726b87&quot;]" data-w-id="8d2cf6e8-2f20-9910-5cf6-825a2a726b87" alt="" id="w-node-_8d2cf6e8-2f20-9910-5cf6-825a2a726b87-3774ba23" class="image-cover"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba84_About%20Page%20Image%20(1).webp" loading="lazy" width="787" data-wf-id="[&quot;2188cea0-b1c9-1999-8d80-7a5f0d7bc428&quot;]" alt="" id="w-node-_2188cea0-b1c9-1999-8d80-7a5f0d7bc428-3774ba23" data-w-id="2188cea0-b1c9-1999-8d80-7a5f0d7bc428" class="image-cover"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba82_About%20Page%20Image%20(5).webp" loading="lazy" data-wf-id="[&quot;0b6fa830-0fde-8a26-8fdc-27f1d31bfcc7&quot;]" data-w-id="0b6fa830-0fde-8a26-8fdc-27f1d31bfcc7" alt="" id="w-node-_0b6fa830-0fde-8a26-8fdc-27f1d31bfcc7-3774ba23" class="image-cover"></div>
+<!-- <div data-w-id="ae3a6e9a-b479-da57-893a-50af76d20679" data-wf-id="[&quot;ae3a6e9a-b479-da57-893a-50af76d20679&quot;]" class="w-layout-grid about-team-image-grid-bottom wf-grid" style="transform: translate3d(0px, 44px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 0;">
+    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba89_About%20Page%20Image%20(7).webp" loading="lazy" data-wf-id="[&quot;702463d4-1ac3-6d6c-7724-883920a8bcd2&quot;]" data-w-id="702463d4-1ac3-6d6c-7724-883920a8bcd2" alt="" class="image-cover">
+    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba87_About%20Page%20Image%20(8).webp" loading="lazy" data-wf-id="[&quot;aa5197f1-cf30-7056-c874-50fda3df69a7&quot;]" data-w-id="aa5197f1-cf30-7056-c874-50fda3df69a7" alt="" class="image-cover">
+</div> -->
+</div>
+</div>
+
+
+
+
+<div class="section-regular grey">
+            <div class="container-small">
+                <div class="title-wrap-center max-with-630">
+                    <div class="margin-bottom-12">
+                        <div class="detail text-color-primary">about Estatenexus</div>
+                    </div>
+                    <h3 >Frequently asked questions</h3>
+                </div>
+                <div class="faq-wrap">
+                    <div class="faq-block">
+                        <div class="faq-header">
+                            <div class="paragraph-large">How do I get started lorem ipsum dolor at?</div>
+                            <div class="filters-drop-down-wrap">
+                                <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba80_chevron-up.svg" loading="lazy" alt="" class="plus-icon">
+                            </div>                            
+                            </div>
+                            <div class="faq-content">
+                                <p class="faq-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at dui mollis metus gravida tristique. Morbi semper ornare 
+                                    euismod. Morbi magna urna, pulvinar ac massa ultricies, molestie finibus sem. Sed facilisis velit nisi, non efficitur nibh tincidunt at. Cras 
+                                    condimentum ante sit amet rutrum euismod. Fusce porttitor ipsum consequat tortor feugiat varius ac et ipsum. Quisque sed est non erat ultricies 
+                                    condimentum sed quis nisi. Nullam rutrum sapien nec sapien venenatis, vitae auctor elit malesuada. Nam feugiat enim a urna blandit ullamcorper. 
+                                    Nunc purus urna, auctor quis aliquet eget, consectetur quis metus.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-block">
+                            <div class="faq-header">
+                                <div class="paragraph-large">How do I get started lorem ipsum dolor at?</div>
+                                <div class="filters-drop-down-wrap">
+                                    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba80_chevron-up.svg" loading="lazy" alt="" class="plus-icon">
+                                </div>                                
+                            </div>
+                            <div class="faq-content">
+                                <p class="faq-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at dui mollis metus gravida tristique. Morbi semper ornare 
+                                    euismod. Morbi magna urna, pulvinar ac massa ultricies, molestie finibus sem. Sed facilisis velit nisi, non efficitur nibh tincidunt at. Cras 
+                                    condimentum ante sit amet rutrum euismod. Fusce porttitor ipsum consequat tortor feugiat varius ac et ipsum. Quisque sed est non erat ultricies 
+                                    condimentum sed quis nisi. Nullam rutrum sapien nec sapien venenatis, vitae auctor elit malesuada. Nam feugiat enim a urna blandit ullamcorper. 
+                                    Nunc purus urna, auctor quis aliquet eget, consectetur quis metus.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="faq-block">
+                            <div class="faq-header">
+                                <div class="paragraph-large">How do I get started lorem ipsum dolor at?</div>
+                                <div class="filters-drop-down-wrap">
+                                    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba80_chevron-up.svg" loading="lazy" alt="" class="plus-icon">
+                                </div>                                
+                            </div>
+                            <div class="faq-content">
+                                <p class="faq-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at dui mollis metus gravida tristique. 
+                                    Morbi semper ornare euismod. Morbi magna urna, pulvinar ac massa ultricies, molestie finibus sem. Sed facilisis velit nisi, 
+                                    non efficitur nibh tincidunt at. Cras condimentum ante sit amet rutrum euismod. Fusce porttitor ipsum consequat tortor feugiat 
+                                    varius ac et ipsum. Quisque sed est non erat ultricies condimentum sed quis nisi. Nullam rutrum sapien nec sapien venenatis, 
+                                    vitae auctor elit malesuada. Nam feugiat enim a urna blandit ullamcorper. Nunc purus urna, auctor quis aliquet eget, 
+                                    consectetur quis metus.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        <div data-w-id="09b4561c-c985-dd18-c7e4-6d46f558a652" data-wf-id="[&quot;09b4561c-c985-dd18-c7e4-6d46f558a652&quot;]" class="section-regular"><div data-w-id="09b4561c-c985-dd18-c7e4-6d46f558a653" data-wf-id="[&quot;09b4561c-c985-dd18-c7e4-6d46f558a653&quot;]" class="container-regular"><div data-w-id="09b4561c-c985-dd18-c7e4-6d46f558a654" data-wf-id="[&quot;09b4561c-c985-dd18-c7e4-6d46f558a654&quot;]" class="title-wrap-center" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div data-w-id="f2970321-c7cf-4395-2340-c82b4bfb368a" data-wf-id="[&quot;f2970321-c7cf-4395-2340-c82b4bfb368a&quot;]" class="margin-bottom-16"><h3 data-w-id="09b4561c-c985-dd18-c7e4-6d46f558a655" data-wf-id="[&quot;09b4561c-c985-dd18-c7e4-6d46f558a655&quot;]">Contact us</h3></div><p data-w-id="09b4561c-c985-dd18-c7e4-6d46f558a657" data-wf-id="[&quot;09b4561c-c985-dd18-c7e4-6d46f558a657&quot;]" class="paragraph-regular">Questions about Hireup? Get in touch and let us know how we can help.</p></div><div data-w-id="0031b683-4aef-bb66-79a7-f4a04ab4be72" data-wf-id="[&quot;0031b683-4aef-bb66-79a7-f4a04ab4be72&quot;]" class="w-layout-grid contact-us-grid wf-grid" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;"><div id="w-node-a681d0e8-a327-f6e8-1998-8a38a6660cf0-3774ba23" data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf0" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf0&quot;]"><div id="w-node-a681d0e8-a327-f6e8-1998-8a38a6660cf1-3774ba23" data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf1" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf1&quot;]" class="contact-image-wrap"><img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba92_Feature%20Image.webp" loading="lazy" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf2&quot;]" data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf2" alt="" class="image-cover"></div><div data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf3" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf3&quot;]" class="partnership-wrap"></div></div><div data-w-id="234a2666-d91f-313a-a8e6-61ad0b539b55" data-wf-id="[&quot;234a2666-d91f-313a-a8e6-61ad0b539b55&quot;]"><div data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d7f9" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d7f9&quot;]" class="w-form"><form method="get" name="email-form" data-name="Email Form" data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d7fa" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d7fa&quot;]" id="email-form" data-wf-page-id="6549f7990b138d653774ba23" data-wf-element-id="afb87706-dfd4-d0e8-42a4-38ba5625d7fa" aria-label="Email Form"><label for="name" data-w-id="b22886af-0ca1-16f8-441f-ef127d6b5a78" data-wf-id="[&quot;b22886af-0ca1-16f8-441f-ef127d6b5a78&quot;]">Name</label><input class="form-field w-input" maxlength="256" name="name" data-name="Name" placeholder="Your Name" data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d7fd" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d7fd&quot;]" type="text" id="name"><label for="email" data-w-id="4e51ced9-ea7c-e0a5-c8f5-dd6d2b4abdec" data-wf-id="[&quot;4e51ced9-ea7c-e0a5-c8f5-dd6d2b4abdec&quot;]">Email</label><input class="form-field w-input" maxlength="256" name="email" data-name="email" placeholder="Your Email" data-w-id="2df42cf4-d231-ecc1-f6b7-3e57cc693445" data-wf-id="[&quot;2df42cf4-d231-ecc1-f6b7-3e57cc693445&quot;]" type="email" id="email"><label for="subject" data-w-id="93a43fd2-4c5b-627d-6502-72851c151a72" data-wf-id="[&quot;93a43fd2-4c5b-627d-6502-72851c151a72&quot;]">Subject</label><input class="form-field w-input" maxlength="256" name="subject" data-name="subject" placeholder="Subject" data-w-id="81de1809-66f0-9a1a-c219-b4bff3ccceb6" data-wf-id="[&quot;81de1809-66f0-9a1a-c219-b4bff3ccceb6&quot;]" type="text" id="subject"><label for="message" data-w-id="b599196a-fae1-2d2c-db52-9c62535ca526" data-wf-id="[&quot;b599196a-fae1-2d2c-db52-9c62535ca526&quot;]">Message</label><textarea class="large-form-field w-input" maxlength="5000" name="message" data-name="message" placeholder="Message" data-w-id="c418d524-2774-ebb1-ea88-b9a0e33c2a59" data-wf-id="[&quot;c418d524-2774-ebb1-ea88-b9a0e33c2a59&quot;]" id="message"></textarea><a data-w-id="a496081a-0e9d-b95a-9cb4-d2d665c6501f" data-wf-id="[&quot;a496081a-0e9d-b95a-9cb4-d2d665c6501f&quot;]" href="#" class="button-primary-right-icon w-inline-block"><div data-w-id="a496081a-0e9d-b95a-9cb4-d2d665c65020" data-wf-id="[&quot;a496081a-0e9d-b95a-9cb4-d2d665c65020&quot;]">Submit</div><div data-w-id="a496081a-0e9d-b95a-9cb4-d2d665c65022" data-wf-id="[&quot;a496081a-0e9d-b95a-9cb4-d2d665c65022&quot;]" class="icon-regular w-embed"><svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+<path fill="currentColor" d="M15.187 11.2362L11.0895 7.13873L12.1696 6.05859L18.1111 12.0001L12.1696 17.9416L11.0895 16.8615L15.187 12.764H5.88892V11.2362H15.187Z"></path>
+</svg></div></a></form><div data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d802" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d802&quot;]" class="success-message w-form-done" tabindex="-1" role="region" aria-label="Email Form success"><div data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d803" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d803&quot;]">Thank you! Your submission has been received!</div></div><div data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d805" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d805&quot;]" class="success-message w-form-fail" tabindex="-1" role="region" aria-label="Email Form failure"><div data-w-id="afb87706-dfd4-d0e8-42a4-38ba5625d806" data-wf-id="[&quot;afb87706-dfd4-d0e8-42a4-38ba5625d806&quot;]">Oops! Something went wrong while submitting the form.</div></div></div></div></div></div><div data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf4" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf4&quot;]" class="partnership-text-wrap"><div data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cf5" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cf5&quot;]">Manage and Advertise your Property all in One Place<span data-w-id="a681d0e8-a327-f6e8-1998-8a38a6660cfa" data-wf-id="[&quot;a681d0e8-a327-f6e8-1998-8a38a6660cfa&quot;]" class="header-company-span"></span></div></div></div>
+        </div>
+
+        <!-- section End -->
+
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+            <div class="container py-5">
+                <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                    <div class="row g-4">
+                        <div class="col-lg-3">
+                            <a href="#">
+                                <h1 class="text-primary mb-0">EstateNexus</h1>
+                                <p class="text-secondary mb-0">property manager</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="position-relative mx-auto">
+                                <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
+                                <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="d-flex justify-content-end pt-3">
+                                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fa-brands fa-x-twitter"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Why People Like us!</h4>
+                            <p class="mb-4">
+                                People love EstateNexus for its seamless property management,
+                                diverse listings, user-friendly interface, and excellent customer service.
+                            </p>
+                            <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Shop Info</h4>
+                            <a class="btn-link" href="{% url 'User:about' %}">About Us</a>
+                            <a class="btn-link" href="{% url 'User:contact-page' %}">Contact Us</a>
+                            <a class="btn-link" href="">Privacy Policy</a>
+                            <a class="btn-link" href="">Terms & Condition</a>
+                            <a class="btn-link" href="">Return Policy</a>
+                            <a class="btn-link" href="">FAQs & Help</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Account</h4>
+                            <a class="btn-link" href="">My Account</a>
+                            <a class="btn-link" href="">Shop details</a>
+                            <a class="btn-link" href="">Shopping Cart</a>
+                            <a class="btn-link" href="">Wishlist</a>
+                            <a class="btn-link" href="">Order History</a>
+                            <a class="btn-link" href="">International Orders</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Contact</h4>
+                            <p>Address: 24 Westlands Rd,Nairobi</p>
+                            <p>Email: estatenexus@gmail.com</p>
+                            <p>Phone: +254 758 78004</p>
+                            <p>Payment Accepted</p>
+                            <div class="img-fluid">
+                            <img src="../../../static/img/payment.png" alt="">
+                            <img src="../../../static/img/M-PESA-logo-2 (1).png" class="mpesa" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright bg-dark py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>EstateNexus</a>, All right reserved.</span>
+                    </div>
+                    <div class="col-md-6 my-auto text-center text-md-end text-white">
+                      
+                        Designed By <a class="border-bottom" href="https://steve-rebrand.com">smb</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+
+        
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/lib/easing/easing.min.js"></script>
+    <script src="../../../static/lib/waypoints/waypoints.min.js"></script>
+    <script src="../../../static/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="../../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+
+
+    <!-- Template Javascript -->
+    <script src="../../../static/js/main.js"></script>
+    </body>
+
+</html>

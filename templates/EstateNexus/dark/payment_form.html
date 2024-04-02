@@ -1,0 +1,6 @@
+<form id="payment-form" method="post">
+    {% csrf_token %}
+    {{ payment_form.as_p }}  <!-- Render form fields as paragraphs -->
+    <button type="submit">Submit Payment</button>
+</form>
+<div id="payment-details"></div>

@@ -1,0 +1,872 @@
+{% load my_extras %}
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>EstateNexus - The Property Manager</title>
+    <!-- Simple bar CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/simplebar.css' %}">
+    <!-- Fonts CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/feather.css' %}">
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/daterangepicker.css' %}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/app-light.css' %}" id="lightTheme" disabled>
+    <link rel="stylesheet" href="{% static 'dark/css/app-dark.css' %}" id="darkTheme">
+  </head>
+  <style>
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal-content {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 800px;
+    }
+
+    .modal-content {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s ease-in-out;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    @keyframes zoom {
+        from {
+            transform: scale(0)
+        }
+
+        to {
+            transform: scale(1)
+        }
+    }
+
+    /* Download button styles */
+    .download-btn {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+     /* Add CSS styles to make the review section scrollable */
+    .review-section {
+        max-height: 400px; /* Adjust the max-height as needed */
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* Thin scrollbar styles */
+    .review-section::-webkit-scrollbar {
+        width: 5px; /* Adjust the width as needed */
+    }
+
+    .review-section::-webkit-scrollbar-track {
+        background: #f1f1f1; /* Track color */
+    }
+
+    .review-section::-webkit-scrollbar-thumb {
+        background: #888; /* Thumb color */
+    }
+
+    .review-section::-webkit-scrollbar-thumb:hover {
+        background: #555; /* Hover state thumb color */
+    }
+</style>
+  <body class="vertical  dark  ">
+    <div class="wrapper">
+      <nav class="topnav navbar navbar-light">
+        <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+          <i class="fe fe-menu navbar-toggler-icon"></i>
+        </button>
+        <form class="form-inline mr-auto searchform text-muted">
+          <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search" placeholder="Type something..." aria-label="Search">
+        </form>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="dark">
+              <i class="fe fe-sun fe-16"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
+              <span class="fe fe-grid fe-16"></span>
+            </a>
+          </li>
+          <li class="nav-item nav-notif">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
+              <span class="fe fe-bell fe-16"></span>
+              <span class="dot dot-md bg-success"></span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="avatar avatar-sm mt-2">
+                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="#">Activities</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+        <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+          <i class="fe fe-x"><span class="sr-only"></span></i>
+        </a>
+        <nav class="vertnav navbar navbar-light">
+          <!-- nav bar -->
+          <div class="w-100 mb-4 d-flex">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'User:dashboard' %}">
+              <img src="{% static 'dark/images/home (2).png' %}" alt="estatenexus">
+            </a>
+          </div>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item dropdown">
+              <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <i class="fe fe-pie-chart fe-16"></i>
+                <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+              </a>
+              <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
+                <li class="nav-item active">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard' %}"><span class="ml-1 item-text">Main</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard-sales' %}"><span class="ml-1 item-text">E-commerce</span></a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Details</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            {% if request.user == property.user or request.user == property.manager %}
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:payments' property.id %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-dollar-sign fe-16"></i>
+                <span class="ml-3 item-text">Payments</span>
+                <span class="badge badge-pill badge-primary text-center mt-1">New</span>
+              </a>
+            </li>
+              {% endif %}
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:managers' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-users fe-16"></i>
+                <span class="ml-3 item-text">Managers</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:properties' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-home fe-16"></i>
+                <span class="ml-3 item-text">Properties</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Apps</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:calendar' %}">
+                <i class="fe fe-calendar fe-16"></i>
+                <span class="ml-3 item-text">Calendar</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Documentation</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:getting-started' %}">
+                <i class="fe fe-help-circle fe-16"></i>
+                <span class="ml-3 item-text">Getting Start</span>
+              </a>
+            </li>
+          </ul>
+          <div class="btn-box w-100 mt-5 mb-1">
+            <a href="{% url 'User:logout' %}" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
+              <i class="fe fe-power fe-12 mx-2"></i><span class="small">LogOut</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+      <main role="main" class="main-content">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div class="col-12">
+              <!-- <h2>Section Property</h2> -->
+              <div class="row">
+                <div class="col-md-12 mb-4">
+                  <div class="card profile shadow">
+                    <div class="card-body my-4">
+                      <div class="row align-items-center">
+                        <div class="col-md-3 text-center mb-5">
+                          <a href="#!" class="avatar avatar-xl">
+                            <img src="{{ property.photo.url }}" alt="{{ property.name }}'s photo" class="avatar-img rounded-circle" style="border-radius: 50%;!important; height: 10em;!important; width: 10em;!important;">
+                          </a>
+                        </div>
+                        <div class="col">
+                          <div class="row align-items-center">
+                            <div class="col-md-7">
+                              <h4 class="mb-1">{{ property.name }}</h4>
+                              <p class="small mb-3"><span class="badge badge-dark">{{ property.county }}, {{ property.country }}</span></p>
+                            </div>
+                            <div class="col">
+                            </div>
+                          </div>
+                          <div class="row mb-4">
+                            <div class="col-md-7">
+                              <p class="text-muted">{{ property.description }}</p>
+                            </div>
+                            <div class="col">
+                              <p class="small mb-0 text-muted">{{ property.company }}</p>
+                              <p class="small mb-0 text-muted">P.O. Box {{ property.zip_code }}, {{ property.address }} {{ property.county }} {{ property.country }}</p>
+                              <p class="small mb-0 text-muted">{{ property.phone_number }}</p>
+                            </div>
+                          </div>
+                          <div class="row align-items-center">
+                            <div class="col-md-7 mb-2">
+                              <span class="small text-muted mb-0">Created {{ property.created|date:"F j, Y" }}</span>
+                            </div>
+                              {% if user.role == 'owner' or user.role == 'manager' %}
+                            <div class="col mb-2">
+                              <button type="button" class="btn btn-primary">Edit</button>
+                              <button type="button" class="btn btn-secondary">Delete</button>
+                              <a href="{% url 'User:property-contact' property_id=property.id %}">
+                              <button type="button" class="btn btn-secondary">Mesages</button>
+                              </a>
+                              {% elif user.role == 'manager' %}
+                              <button type="button" class="btn btn-secondary">Assign</button>
+                            </div>
+                              {% endif %}
+                          </div>
+                        </div>
+                      </div> <!-- / .row- -->
+                    </div> <!-- / .card-body - -->
+                  </div> <!-- / .card- -->
+                </div> <!-- / .col- -->
+              </div> <!-- end section -->
+              <div class="row">
+                {% if user.role == 'owner' or user.role == 'manager' %}
+                <div class="col-md-6 col-xl-3 mb-4 mr-4">
+                  <div class="card shadow bg-primary ml-3 text-white mr-4" style="width: 14em!important;">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col-3 text-center">
+                          <span class="circle circle-sm bg-primary-light">
+                            <i class="fe fe-16 fe-shopping-bag text-white mb-0"></i>
+                          </span>
+                        </div>
+                        <div class="col pr-0">
+                          <p class="small text-light mb-0">Monthly Sales</p>
+                          <span class="h3 mb-0 text-white">$1250</span>
+                          <span class="small text-muted">+5.5%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-4">
+                  <div class="card shadow ">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col-3 text-center">
+                          <span class="circle circle-sm bg-primary">
+                            <i class="fe fe-16  fe-users text-white mb-0"></i>
+                          </span>
+                        </div>
+                        <div class="col pr-0">
+                          <p class="small text-muted mb-0">Tenants</p>
+                          <span class="h3 mb-0">{{ num_tenants|default:0 }}</span>
+                          <span class="small text-success">R<span>70</span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  {% else %}
+              <div class="col-md-6 col-xl-3 mb-4">
+                  <div class="card shadow bg-primary text-white">
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col-3 text-center">
+                          <span class="circle circle-sm bg-primary-light">
+                            <i class="fe fe-16 fe-dollar-sign text-white mb-0"></i>
+                          </span>
+                        </div>
+                        <div class="col pr-0">
+                          <p class="small text-light mb-0">Monthly Rent</p>
+                          <span class="h3 mb-0 text-white">${{ property_occupied.price }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="col-md-6 col-xl-3 mb-4" >
+                  <div class="card shadow bg-primary text-white" >
+                    <div class="card-body">
+                      <div class="row align-items-center">
+                        <div class="col-3 text-center">
+                          <span class="circle circle-sm bg-primary-light">
+                            <i class="fe fe-16 fe-user-check text-white mb-0"></i>
+                          </span>
+                        </div>
+                        <div class="col pr-0">
+                          <p class="small text-light mb-0">Paid</p>
+                          <span class="h3 mb-0 text-white">1200</span>
+                          <span class="small text-success text-white">-50</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  {% endif %}
+                <div class="col-md-6 ml-3">
+                    <div class="card shadow mb-4">
+                      <div class="card-body">
+                        <div class="row align-items-center">
+                          <div class="col-4 col-md-2 text-center">
+                              {% if manager %}
+                            <a href="{% url 'User:managers-profile'  manager.id %}" class="avatar avatar-md">
+                              {% endif %}
+                              <img src="{{ manager.photo.url }}" alt="{{ manager.first_name }}'s photo" class="avatar-img rounded-circle">
+                            </a>
+                          </div>
+                          <div class="col">
+                            <strong class="mb-1">{{ manager.first_name }} {{ manager.last_name }}</strong><span class="dot dot-lg bg-success ml-1"></span>
+                            <p class="small text-muted mb-1">{{ manager.email }} <span> {{ manager.phone_number }}</span></p>
+                          </div>
+                            {% if user.role == 'tenant' %}
+                          <div class="col-4 col-md-auto offset-4 offset-md-0 my-2">
+                            <a href="{% url 'User:tenant-profile' %}" class="btn btn-sm btn-secondary">Contact</a>
+                          </div>
+                            {% endif %}
+                        </div>
+                      </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
+                  </div> <!-- / .col- -->
+              </div> <!-- end section -->
+            </div>
+          </div> <!-- .row -->
+        </div> <!-- .container-fluid -->
+          {% if user.role == 'owner' or user.role == 'manager' %}
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                    <div class="text-left d-flex flex-row  mt-3 top-1 p-2 end-0 me-5">
+                        <h2 class="h5 page-title mr-2">Properties Tenants</h2>
+                          <a href="">
+                          <span class="circle circle-sm mr-2 mt-n2 bg-primary">
+                            <i class="fe fe-download text-white mb-0"></i>
+                          </span>
+                          </a>
+                          <a href="{% url 'User:property-contact' property_id=property.id %}">
+                          <span class="circle circle-sm mr-2 mt-n2 bg-primary">
+                            <i class="fe fe-mail text-white mb-0"></i>
+                          </span>
+                          </a>
+                          <a href="">
+                            <span class="circle circle-sm mr-2 mt-n2 bg-primary">
+                              <i class="fe fe-trash text-white mb-0"></i>
+                            </span>
+                            </a>
+                            <a href="{% url 'User:signup' %}">
+                                <span class="circle circle-sm mr-2 mt-n2 bg-primary">
+                                  <i class="fe fe-plus text-white mb-0"></i>
+                                </span>
+                                </a>
+                        </div>
+                    <p class="mb-3">View advanced tenant details for Runda-apartments</p>
+                  </div>
+                </div>
+              </div>
+        </div>
+            <!-- expandable table section -->
+        <div class="row">
+              <div class="col-md-12 my-4 mt-n1">
+                <div class="card shadow">
+                  <div class="card-body">
+                    <!-- table -->
+                    <table class="table table-hover table-borderless border-v">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>House No</th>
+                          <th>Joined Date</th>
+                          <th>No Rooms</th>
+                          <th>Tenant Name</th>
+                          <th>Status</th>
+                          <th>Paid Total</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                              {% for tenant in tenants %}
+                        <tr class="accordion-toggle collapsed" id="c-{{ tenant.tenant_id }}" data-toggle="collapse" data-parent="#c-{{ tenant.tenant_id }}" href="#collap-{{ tenant.tenant_id }}">
+                          <td>{{ tenant.house_number }}</td>
+                          <td>{{ tenant.joined }}</td>
+                          <td>{{ tenant.no_rooms }}</td>
+                          <td>{{ tenant.first_name }} {{ tenant.last_name }}</td>
+                          <td><span class="badge badge-pill badge-success mr-2">S</span><small class="text-muted">Paid</small></td>
+                          <td>$37.39</td>
+                          <td>$80.11</td>
+                          <td>
+                            <button class="btn btn-sm dropdown-toggle more-horizontal" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <span class="text-muted sr-only">Action</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                              <a class="dropdown-item" href="#">Edit</a>
+                              <a class="dropdown-item" href="#">Remove</a>
+                              <a class="dropdown-item" href="./#" data-toggle="modal" data-target=".modal-message">Chat</a>
+                            </div>
+                          </td>
+                        </tr>
+                        <tr id="collap-{{ tenant.tenant_id }}" class="collapse in in p-3 bg-light">
+                          <td colspan="8">
+                            <dl class="row mb-0 mt-1">
+                              <div class="col-4 col-md-2 text-center">
+                                <a href="profile-posts.html" class="avatar avatar-md">
+                                  <img src="{{ tenant.photo.url }}" alt="{{ tenant.first_name }}'s photo" class="avatar-img rounded-circle" style="border-radius: 50%; height: 4em; width: 4em">
+                                </a>
+                              </div>
+                              <dt class="col-sm-1">ID</dt>
+                              <dd class="col-sm-2">{{ tenant.tenant_id }}</dd>
+                              <dt class="col-sm-1">Lease-Start</dt>
+                              <dd class="col-sm-2">{{ tenant.lease_start_date }}</dd>
+                              <dt class="col-sm-1">Lease-End</dt>
+                              <dd class="col-sm-2">{{ tenant.lease_end_date }}</dd>
+                              <dt class="col-sm-1 text-truncate">Vehicle-No</dt>
+                              <dd class="col-sm-2">{{ tenant.vehicle_no }}</dd>
+                              <dt class="col-sm-1 text-truncate">Occupants</dt>
+                              <dd class="col-sm-2">{{ tenant.occupants }}</dd>
+                              <dt class="col-sm-1">Sum-Insured</dt>
+                              <dd class="col-sm-2">{{ tenant.sum_insured }}</dd>
+                              <dt class="col-sm-1 text-truncate">Phone-No</dt>
+                              <dd class="col-sm-2">{{ tenant.phone_number }}</dd>
+                              <dt class="col-sm-1">Email</dt>
+                              <dd class="col-sm-2">{{ tenant.email }}</dd>
+                            </dl>
+                          </td>
+                        </tr>
+                              {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+        </div>
+            <!-- end section -->
+          {% endif %}
+          <!-- .card -->
+        <div class="card shadow mb-4">
+          <div class="card-header">
+            <strong class="card-title">Tenant Reviews</strong>
+            <span class="float-right"><i class="fe fe-message-circle mr-2"></i>{{ reviews.count }}</span>
+          </div>
+          <div class="card-body ">
+          <div class="review-section" >
+            <div class="swipe">
+              {% for review in reviews %}
+              <div class="row align-items-center mb-4">
+                <div class="col-auto">
+                  <div class="avatar avatar-sm mb-3 mx-4">
+                    <img src="{{ review.user.avatar.url }}" alt="..." class="avatar-img rounded-circle">
+                  </div>
+                </div>
+                <div class="col">
+                  <strong>{{ review.user.name }}</strong>
+                    {% if review.user.role == 'tenant' %}
+                        <span>{{ review.user.tenant.house_number }}</span>
+                        <span>Tenant ID: {{ review.user.tenant.tenant_id }}</span>
+                    {% else %}
+                    <span>{{ review.property.name }}</span>
+                    {% endif %}
+                  <div class="mb-2">{{ review.text }}</div>
+                    {% if review.image %}
+                    <div class="card mb-3 bg-light w-50">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-md-2 text-center">
+                                <img class="img-fluid rounded m-1 review-image" src="{{ review.image.url }}" alt="..." style="width:100%;max-width:300px; cursor: pointer;">
+                            </div>
+                            <div id="myModal" class="modal">
+                                <span class="close">&times;</span>
+                                <img class="modal-content" id="img01">
+                                <div id="caption"></div>
+                                <div class="download-btn">
+                                    <a href="#" id="downloadBtn" class="btn btn-primary" download>Download Image</a>
+                                </div>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="card-body py-0">
+                                    <p class="card-title mb-0">{{ review.image.url|filename }}</p>
+                                    <div class="card-text my-0 text-muted small">
+                                        <span class="mr-2">{{ review.image.size|filesize }}</span>
+                                        <span class="mr-2">{{ review.image.url|extension }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <small class="text-muted">{{ review.created_at }}</small>
+                </div>
+              </div> <!-- .row-->
+              {% endfor %}
+            </div>
+          </div>
+            <hr class="my-4">
+            <h6 class="mb-3 text-lg-center">Add a Review</h6>
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="text">Review:</label>
+                <textarea class="form-control bg-light" id="text" name="text" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                   <div class="button-wrapper">
+                                <label for="image">Attach Image:</label>
+                                <label for="id_photo" class="btn btn-primary mt-2  ml-1" tabindex="0">
+                                    <i class="fe fe-paperclip"></i>
+                                </label>
+                                 <input
+                                        type="file"
+                                        id="id_photo"
+                                        name="photo"
+                                        class="account-file-input"
+                                        hidden
+                                        accept="image/png, image/jpeg"
+                                    />
+                                <button type="button" class="btn btn-outline-secondary account-image-reset">
+                                    <i class="bx bx-reset d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Reset</span>
+                                </button>
+                        </div>
+                  <i class="bx bx-upload d-block d-sm-none"></i>
+                <input type="file" class="form-control-file" hidden id="image" name="image">
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div> <!-- .card-body -->
+        </div>
+        <!-- .card -->
+        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group list-group-flush my-n3">
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-box fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Package has uploaded successfull</strong></small>
+                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
+                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-download fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Widgets are updated successfull</strong></small>
+                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
+                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-inbox fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Notifications have been sent</strong></small>
+                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
+                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
+                      </div>
+                    </div> <!-- / .row -->
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-link fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Link was attached to menu</strong></small>
+                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
+                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
+                      </div>
+                    </div>
+                  </div> <!-- / .row -->
+                </div> <!-- / .list-group -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body px-5">
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-success justify-content-center">
+                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Control area</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Activity</p>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Droplet</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Upload</p>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Users</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Settings</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modal message start -->
+        <div class="modal fade modal-message modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="defaultModalLabel">Messages</h5>
+                <span class="float-right ml-2 mt-1"><i class="fe fe-message-circle mr-2"></i>4</span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group list-group-flush my-n3 " style="position: relative; height: 100%">
+                  <div class="card-body overflow-auto" data-mdb-perfect-scrollbar="true" style="position: relative; height: 460px; overflow: auto;">
+
+                    <div class="d-flex justify-content-between">
+                      <p class="small mb-1">Timona Siera</p>
+                      <p class="small mb-1 text-muted">23 Jan 2:00 pm</p>
+                    </div>
+                    <div class="d-flex flex-row justify-content-start">
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+                        alt="avatar 1" class="mr-1" style="width: 45px; height: 100%;">
+                      <div>
+                        <p class="small p-2 ms-3 mb-3 rounded-3 card" style="background-color: #f5f6f7;">For what reason
+                          would it
+                          be advisable for me to think about business content?</p>
+                      </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <p class="small mb-1 text-muted">23 Jan 2:05 pm</p>
+                      <p class="small mb-1">Johny Bullock</p>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                      <div>
+                        <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-warning card">Thank you for your believe in
+                          our
+                          supports</p>
+                      </div>
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                        alt="avatar 1" style="width: 45px; height: 100%;">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <p class="small mb-1">Timona Siera</p>
+                      <p class="small mb-1 text-muted">23 Jan 5:37 pm</p>
+                    </div>
+                    <div class="d-flex flex-row justify-content-start">
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava5-bg.webp"
+                        alt="avatar 1" class="mr-1" style="width: 45px; height: 100%;">
+                      <div>
+                        <p class="small p-2 ms-3 mb-3 rounded-3 card" style="background-color: #f5f6f7;">Lorem ipsum dolor
+                          sit amet
+                          consectetur adipisicing elit similique quae consequatur</p>
+                      </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                      <p class="small mb-1 text-muted">23 Jan 6:10 pm</p>
+                      <p class="small mb-1">Johny Bullock</p>
+                    </div>
+                    <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                      <div>
+                        <p class="small p-2 me-3 mb-3 text-white rounded-3 bg-warning card">Dolorum quasi voluptates quas
+                          amet in
+                          repellendus perspiciatis fugiat</p>
+                      </div>
+                      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava6-bg.webp"
+                        alt="avatar 1" style="width: 45px; height: 100%;">
+                    </div>
+
+                  </div>
+                  <div class="modal-footer">
+                    <div class="input-group mb-0">
+                      <textarea class="form-control bg-light scrollbar scrollbar-black bordered-black square thin" id="exampleFormControlTextarea1" rows="2"  style="resize: none;"></textarea>
+                      <button class="btn btn-primary mt-2 ml-1" type="button" id="button-addon2" style="padding-top: .50rem; height: 3em;">
+                        Send
+                      </button>
+                    </div>
+                  </div>
+                </div> <!-- / .list-group -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- modal message end -->
+      </main> <!-- main -->
+    </div> <!-- .wrapper -->
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the image and insert it inside the modal
+        var img = document.getElementsByClassName("review-image");
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+        for (var i = 0; i < img.length; i++) {
+            img[i].onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                modalImg.style.maxWidth = "80%"; // Set maximum width for the image
+                modalImg.style.maxHeight = "80vh"; // Set maximum height for the image
+                modalImg.style.marginTop = "20px"; // Add margin top to the image
+                captionText.innerHTML = this.alt;
+                downloadBtn.href = this.src; // Set download link to the clicked image
+            }
+        }
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // Get the download button
+        var downloadBtn = document.getElementById("downloadBtn");
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+        // Scroll to the bottom of the review section on page load
+    window.onload = function() {
+        var reviewSection = document.querySelector('.review-section');
+        reviewSection.scrollTop = reviewSection.scrollHeight;
+    }
+
+    // Scroll to the bottom of the review section whenever new content is added
+    function scrollToBottom() {
+        var reviewSection = document.querySelector('.review-section');
+        reviewSection.scrollTop = reviewSection.scrollHeight;
+    }
+    </script>
+    <script src="{% static 'dark/js/jquery.min.js' %}"></script>
+    <script src="{% static 'dark/js/popper.min.js' %}"></script>
+    <script src="{% static 'dark/js/moment.min.js' %}"></script>
+    <script src="{% static 'dark/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dark/js/simplebar.min.js' %}"></script>
+    <script src='{% static 'dark/js/daterangepicker.js' %}'></script>
+    <script src='{% static 'dark/js/jquery.stickOnScroll.js' %}'></script>
+    <script src="{% static 'dark/js/tinycolor-min.js' %}"></script>
+    <script src="{% static 'dark/js/config.js' %}"></script>
+    <script src="{% static 'dark/js/apps.js' %}"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag()
+      {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-56159088-1');
+    </script>
+  </body>
+</html>

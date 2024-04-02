@@ -1,0 +1,1280 @@
+{% load static %}
+{% load range_filter %}
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>EstateNexus - The Property Manager</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
+
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+        <!-- Libraries Stylesheet -->
+        <link href="{% static '/lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+        <link href="{% static '/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+         <!--=============== FAVICON ===============-->
+         <link rel="shortcut icon" href="{% static '/img/favicon.png' %}" type="image/x-icon">
+         <link rel="shortcut icon" href="{% static '/img/favicon.png' %}" type="image/x-icon">
+
+         <!--=============== BOXICONS ===============-->
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+ 
+         <!--=============== SWIPER CSS ===============--> 
+         <link rel="stylesheet" href="{%  static '/assets/css/swiper-bundle.min.css' %}">
+ 
+         <!--=============== CSS ===============--> 
+         <link rel="stylesheet" href="{% static '/assets/css/styles.css' %}">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="{% static '/css/style.css' %}" rel="stylesheet">
+
+        <!-- Swiper JS -->
+        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- Spinner Start -->
+        <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+            <div class="spinner-grow text-primary" role="status"></div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar start -->
+        <div class="container-fluid fixed-top">
+            <div class="container topbar bg-primary d-none d-lg-block">
+                <div class="d-flex justify-content-between">
+                    <div class="top-info ps-2">
+                        <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">24 Westlands Rd,Nairobi</a></small>
+                        <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">estatenexus@gmail.com</a></small>
+                    </div>
+                    <div class="top-link pe-2">
+                        <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                        <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
+                    </div>
+                </div>
+            </div>
+            <div class="container px-0">
+                <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                    <a href="/" class="navbar-brand"><h1 class="text-primary display-6">EstateNexus</h1></a>
+                    <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars text-primary"></span>
+                    </button>
+                    <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                        <div class="navbar-nav mx-auto">
+                            <a href="/" class="nav-item nav-link active">Home</a>
+                            <a href="{% url 'User:shop' %}" class="nav-item nav-link">Shop</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                                <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                                    <a href="{% url 'User:cart' %}" class="dropdown-item">Cart</a>
+                                    <a href="{% url 'User:checkout' %}" class="dropdown-item">Checkout</a>
+                                    <a href="{% url 'User:testimonial' %}" class="dropdown-item">Testimonial</a>
+                                    <a href="{% url 'User:error' %}" class="dropdown-item">404 Page</a>
+                                    <a href="{% url 'User:about' %}" class="dropdown-item">About</a>
+                                    <a href="{% url 'User:access-denied' %}" class="dropdown-item">access-denied</a>
+                                    <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                                    <a href="{% url 'User:password_protected' %}" class="dropdown-item">Password protected page</a>
+                                    <a href="{% url 'User:replace-password' %}" class="dropdown-item">Replace password</a>
+                                    <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                                    <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                                    <a href="{% url 'User:user-account' %}" class="dropdown-item">User Account</a>
+                                </div>
+                            </div>
+                            <a href="{% url 'User:contact-page' %}" class="nav-item nav-link">Contact</a>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'User:properties' %}" class="nav-item nav-link">Add Property</a>
+                                {% else %}
+                            <a href="{% url 'User:getting-started' %}" class="nav-item nav-link">Add Property</a>
+                            {% endif %}
+                        </div>
+                        <div class="d-flex m-3 me-0">
+                            <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                            <a href="#" class="position-relative me-4 my-auto">
+                                <i class="fa fa-shopping-bag fa-2x"></i>
+                                <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                            </a>
+                            <a href="#" class="my-auto">
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-user fa-2x"></i>
+                                </a>
+                               <div class="dropdown-menu mr-2 bg-secondary rounded-0">
+                                    {% if user.is_authenticated %}
+                                        {% if user.role == 'owner' %}
+                                            <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                                        {% elif user.role == 'manager' %}
+                                            <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                                        {% elif user.role == 'tenant' %}
+                                            <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                                        {% endif %}
+                                        <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                                        <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                                    {% else %}
+                                        <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                                        <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Navbar End -->
+
+
+        <!-- Modal Search Start -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center">
+                        <div class="input-group w-75 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Search End -->
+
+
+        <!-- Hero Start -->
+        <div class="container-fluid py-5 mb-5 hero-header" style="background: linear-gradient(rgba(248, 223, 173, 0.1), rgba(248, 223, 173, 0.1)), url(../../../static/img/landing2.jpg);">
+            <div class="container py-5">
+                <div class="row g-5 align-items-center">
+                    <div class="col-md-12 col-lg-7">
+                        <div class="header-badge">
+                            <div  class="header-badge-light">
+                                <div>New</div>
+                            </div>
+                            <div>Special Dashboard For You To Manage Your Properties</div>
+                        </div>
+                        <h2 class="mb-5 display-4 text-primary">Special Dashboard For Landlords and Property Managers</h2>
+                         <!-- advert -->
+                        <p class="paragraph">{% if user.is_authenticated %}<a href="{% url 'User:login' %}">Sign in</a>{% else %}
+                            <a href="{% url 'User:signup' %}">Sign up</a>{% endif %} to get started!</p>
+                        <!--advert end-->
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-2 border-secondary w-75 py-3 px-4 rounded-pill" type="number" placeholder="Search">
+                            <button type="submit" class="btn btn-primary border-2 border-secondary py-3 px-4 position-absolute rounded-pill text-white h-100" style="top: 0; right: 25%;">Submit Now</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-5">
+                        <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item active rounded">
+                                    <img src="../../../static/img/pricing2-1.jpg" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
+                                    <a {% if user.is_authenticated %} href="{% url 'User:login'%}" {% else %} href="{% url 'User:signup' %}" {% endif %} class="btn px-4 py-2 text-white rounded">Manage</a>
+                                </div>
+                                <div class="carousel-item rounded">
+                                    <img src="../../../static/img/pricing1-2.jpg" class="img-fluid w-100 h-100 rounded" alt="Second slide">
+                                    <a {% if user.is_authenticated %} href="{% url 'User:login'%}" {% else %} href="{% url 'User:signup' %}" {% endif %} class="btn px-4 py-2 text-white rounded">Sale</a>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Hero End -->
+        <div class="title-wrap-row" style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;">
+            <div class="title-wrap-left">
+                <div class="margin-bottom-16 w-clearfix">
+                    <h3 class="heading-2">Property Types</h3>
+                </div>
+                <p class="paragraph-regular text-gray-600"></p>
+            </div>
+            <a href="{% url 'User:shop' %}" class="button-primary w-button">See All Properties</a>
+        </div>
+
+
+        <!-- Features Section Start -->
+        <div class="container-fluid featurs py-5">
+            <div class="container py-5">
+                <div class="collection-list-jobs">
+
+                    <div class="list">
+                    <a href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                        <div class="job-company-wrap">
+                            <div class="icon-wrap-regular">
+                                <img loading="lazy"  src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1d8a128a0b8efc16d479_icon-apartment.png" alt="" class="icon-large">
+                            </div>
+                            <div>
+                                <div class="subheading-regular">Apartments</div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom-24">
+                            <h6>Covertible Apartments</h6>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="list">
+                <a  href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                    <div class="job-company-wrap">
+                        <div class="icon-wrap-regular">
+                            <img  loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1d8a128a0b8efc16d479_icon-apartment.png" alt="" class="icon-large">
+                        </div>
+                        <div>
+                            <div class="subheading-regular">Apartments</div>
+                        </div>
+                    </div>
+                    <div class="margin-bottom-24">
+                        <h6>Studio Apartment</h6>
+                    </div>
+                </a>
+                </div>
+
+                <div class="list">
+                    <a  href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                        <div class="job-company-wrap">
+                            <div class="icon-wrap-regular">
+                                <img  loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1d8a128a0b8efc16d479_icon-apartment.png" alt="" class="icon-large">
+                            </div>
+                            <div>
+                                <div class="subheading-regular">Home</div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom-24">
+                            <h6>Garden Apartment</h6>
+                        </div>
+                    </a>
+                    </div>
+                <div class="list">
+                <a  href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                    <div class="job-company-wrap">
+                        <div class="icon-wrap-regular">
+                            <img loading="lazy" src="../../../static/img/duplex.png" alt="" class="icon-large">
+                        </div>
+                        <div>
+                            <div class="subheading-regular">Home</div>
+                        </div>
+                    </div>
+                    <div class="margin-bottom-24">
+                        <h6>Loft</h6>
+                    </div>
+                </a>
+                </div>
+
+                <div class="list">
+                    <a  href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                        <div class="job-company-wrap">
+                            <div class="icon-wrap-regular">
+                                <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1e46aa7aa6ea98a05f6c_icon-house.png" alt="" class="icon-large">
+                            </div>
+                            <div>
+                                <div class="subheading-regular">Home</div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom-24">
+                            <h6>Penthouse</h6>
+                        </div>
+                    </a>
+                    </div>
+
+                    <div class="list">
+                        <a  href="{% url 'User:shop' %}" class="job-border w-inline-block">
+                    <div class="job-company-wrap">
+                        <div class="icon-wrap-regular">
+                            <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1e46aa7aa6ea98a05f6c_icon-house.png" alt="" class="icon-large">
+                        </div>
+                        <div>
+                            <div class="subheading-regular">Townhouse</div>
+                        </div>
+                    </div>
+                    <div class="margin-bottom-24">
+                        <h6>Duplex</h6>
+                    </div>
+                </a>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- Features Section End -->
+
+
+        
+            <!--==================== ALL PROPERTIES ====================-->
+            <section class="section new" id="new">
+                <div class="testimonial-header text-center">
+                    <h4 class="text-primary">See Properties</h4>
+                    <h1 class="display-5 mb-5 text-dark">View Available Properties...</h1>
+                </div> 
+                <div class="new__container container">
+                    <div id="mySwiper"  class="swiper new-swiper">
+                        <div class="swiper-wrapper">
+                            
+                            <div class="blog-slide new__content swiper-slide w-slide" aria-label="1 of 5" role="group" style="transform: translateX(0px); opacity: 1; transition: transform 500ms ease 0s;">
+                                <div class="collection-list-wrapper w-dyn-list">
+                                    <div role="list" class="regular-collection-list w-dyn-items">
+                                        <div role="listitem" class="w-dyn-item">
+                                            <a href="/company/apartments" class="company-card w-inline-block">
+                                                <div class="company-card-header-wrap">
+                                                    <div class="icon-wrap-regular">
+                                                        <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1d8a128a0b8efc16d479_icon-apartment.png" alt="" class="icon-large">
+                                                    </div>
+                                                    <h6>Apartments</h6>
+                                                </div>
+                                                <p class="paragraph-regular">
+                                                    Navigate the convenience of apartments that offer modern living.
+                                                </p>
+                                                <div class="company-card-employees">
+                                                    {% for apartment in property_counts %}
+                                                    <div aria-hidden="true">{{ apartment.count }}</div>
+                                                    {% endfor %}
+                                                    <div>Available</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-slide new__content swiper-slide w-slide" aria-label="2 of 5" role="group" aria-hidden="true" style="transform: translateX(0px); opacity: 1; transition: transform 500ms ease 0s;">
+                                <div class="collection-list-wrapper w-dyn-list" aria-hidden="true">
+                                    <div role="list" class="regular-collection-list w-dyn-items" aria-hidden="true">
+                                        <div role="listitem" class="w-dyn-item" aria-hidden="true">
+                                            <a href="/company/villa" class="company-card w-inline-block" tabindex="-1" aria-hidden="true">
+                                                <div class="company-card-header-wrap" aria-hidden="true">
+                                                    <div  class="icon-wrap-regular" aria-hidden="true">
+                                                        <img  loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1df1c76304e68331dfcf_icon-villa.png" alt="" class="icon-large" aria-hidden="true">
+                                                    </div>
+                                                    <h6 class="h6-heading" aria-hidden="true">Villa</h6>
+                                                </div>
+                                                <p class="paragraph-regular" aria-hidden="true">
+                                                   Uncover the luxury of villas. Venture into an array of villas that redefine opulence.
+                                                </p>
+                                                <div class="company-card-employees" aria-hidden="true">
+                                                    {% for villa in property_counts %}
+                                                    <div aria-hidden="true">{{ villa.count }}</div>
+                                                    {% endfor %}
+                                                    <div aria-hidden="true">Available</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-slide new__content swiper-slide w-slide" aria-label="3 of 5" role="group" aria-hidden="true" style="transform: translateX(0px); opacity: 1; transition: transform 500ms ease 0s;">
+                                <div class="collection-list-wrapper w-dyn-list" aria-hidden="true">
+                                    <div role="list" class="regular-collection-list w-dyn-items" aria-hidden="true">
+                                        <div role="listitem" class="w-dyn-item" aria-hidden="true">
+                                            <a href="/company/home" class="company-card w-inline-block" tabindex="-1" aria-hidden="true">
+                                                <div class="company-card-header-wrap" aria-hidden="true">
+                                                    <div class="icon-wrap-regular" aria-hidden="true">
+                                                        <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1e46aa7aa6ea98a05f6c_icon-house.png" alt="" class="icon-large" aria-hidden="true">
+                                                    </div>
+                                                    <h6  class="h6-heading" aria-hidden="true">Home</h6>
+                                                </div>
+                                                <p class="paragraph-regular" aria-hidden="true">
+                                                    Discover the comfort of homes. Explore a variety of homes that cater to your lifestyle.
+                                                </p>
+                                                <div class="company-card-employees" aria-hidden="true">
+                                                    {% for home in property_counts %}
+                                                    <div aria-hidden="true">{{ home.count }}</div>
+                                                    {% endfor %}
+                                                    <div aria-hidden="true">Available</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-slide new__content swiper-slide w-slide" aria-label="4 of 5" role="group" aria-hidden="true" style="transform: translateX(0px); opacity: 1; transition: transform 500ms ease 0s;">
+                                <div class="collection-list-wrapper w-dyn-list" aria-hidden="true">
+                                    <div role="list" class="regular-collection-list w-dyn-items" aria-hidden="true">
+                                        <div  role="listitem" class="w-dyn-item" aria-hidden="true">
+                                            <a href="/company/office" class="company-card w-inline-block" tabindex="-1" aria-hidden="true">
+                                                <div class="company-card-header-wrap" aria-hidden="true">
+                                                    <div class="icon-wrap-regular" aria-hidden="true">
+                                                        <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1e9d01bafb20819adfe6_icon-housing.png" alt="" class="icon-large" aria-hidden="true">
+                                                    </div>
+                                                    <h6 class="h6-heading" aria-hidden="true">Office</h6>
+                                                </div>
+                                                <p class="paragraph-regular" aria-hidden="true">
+                                                     Functionality of offices. Delve into diverse office spaces that boost productivity.
+                                                </p>
+                                                <div class="company-card-employees" aria-hidden="true">
+                                                    {% for office in property_counts %}
+                                                    <div aria-hidden="true">{{ office.count }}</div>
+                                                    {% endfor %}
+                                                    <div aria-hidden="true">Available</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-slide new__content swiper-slide w-slide" aria-label="5 of 5" role="group" aria-hidden="true" style="transform: translateX(0px); opacity: 1; transition: transform 500ms ease 0s;">
+                                <div class="collection-list-wrapper w-dyn-list" aria-hidden="true">
+                                    <div role="list" class="regular-collection-list w-dyn-items" aria-hidden="true">
+                                        <div data-dyn-label="Collection Item 1" role="listitem" class="w-dyn-item" aria-hidden="true">
+                                            <a href="/company/building" class="company-card w-inline-block" tabindex="-1" aria-hidden="true">
+                                                <div class="company-card-header-wrap" aria-hidden="true">
+                                                    <div class="icon-wrap-regular" aria-hidden="true">
+                                                        <img loading="lazy" src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a1ed6b538e8ce68e51d25_icon-building.png" alt="" class="icon-large" aria-hidden="true">
+                                                    </div>
+                                                    <h6 class="h6-heading" aria-hidden="true">Building</h6>
+                                                </div>
+                                                <p class="paragraph-regular" aria-hidden="true">
+                                                    Unravel the potential of buildings. Investigate a range of buildings that suit your needs.
+                                                </p>
+                                                <div  class="company-card-employees" aria-hidden="true">
+                                                    {% for building in property_counts %}
+                                                    <div aria-hidden="true">{{ building.count }}</div>
+                                                    {% endfor %}
+                                                    <div aria-hidden="true">Available</div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--==================== COLLECTIONS ====================-->
+
+
+            <!-- Property Shop Start-->
+            <div class="container-fluid fruite py-5">
+                <div class="container py-5">
+                    <div class="tab-class text-center">
+                        <div class="row g-4">
+                            <div class="col-lg-4 text-start">
+                                <h1>Property on Sale</h1>
+                            </div>
+                            <div class="col-lg-8 text-end">
+                                <ul class="nav nav-pills d-inline-flex text-center mb-5">
+                                    <li class="nav-item">
+                                        <a class="d-flex m-2 py-2 bg-light rounded-pill active" data-bs-toggle="pill" href="#tab-1">
+                                            <span class="text-dark" style="width: 130px;">All Properties</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="d-flex py-2 m-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-2">
+                                            <span class="text-dark" style="width: 130px;">Home</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-3">
+                                            <span class="text-dark" style="width: 130px;">Villa</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-4">
+                                            <span class="text-dark" style="width: 130px;">Office</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="d-flex m-2 py-2 bg-light rounded-pill" data-bs-toggle="pill" href="#tab-5">
+                                            <span class="text-dark" style="width: 130px;">Apartment</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div id="tab-1" class="tab-pane fade show p-0 active">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="row g-4">
+                                            {% for property in properties %}
+                                            <div class="col-md-6 col-lg-4 col-xl-3" style="height: 25em!important;">
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <img src="{{ property.photo.url }}" alt="{{ property.name }} Photo" class="img-fluid w-100 rounded-top" style="height: 12em!important;">
+                                                        </a>
+                                                    </div>
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ property.get_option_display }}</div>
+                                                        </a>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom" style="height: 13em!important;">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <h4>{{ property.name }}</h4>
+                                                        <p>{{ property.description }}</p>
+                                                        </a>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap mt-6">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">{{ property.price }}</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-2" class="tab-pane fade show p-0">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="row g-4">
+                                            {% for property in home_properties %}
+                                            <div class="col-md-6 col-lg-4 col-xl-3" style="height: 25em!important;">
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <img src="{{ property.photo.url }}" alt="{{ property.name }} Photo" class="img-fluid w-100 rounded-top" style="height: 12em!important;">
+                                                        </a>
+                                                    </div>
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ property.get_option_display }}</div>
+                                                        </a>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom" style="height: 13em!important;">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <h4>{{ property.name }}</h4>
+                                                        <p>{{ property.description }}</p>
+                                                        </a>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">{{ property.price }}</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-3" class="tab-pane fade show p-0">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="row g-4">
+                                            {% for property in villa_properties %}
+                                            <div class="col-md-6 col-lg-4 col-xl-3" style="height: 25em!important;">
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <img src="{{ property.photo.url }}" alt="{{ property.name }} Photo" class="img-fluid w-100 rounded-top" style="height: 12em!important;">
+                                                        </a>
+                                                    </div>
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ property.get_option_display }}</div>
+                                                        </a>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom" style="height: 13em!important;">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <h4>{{ property.name }}</h4>
+                                                        <p>{{ property.description }}</p>
+                                                        </a>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">{{ property.price }}</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-4" class="tab-pane fade show p-0">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="row g-4">
+                                            {% for property in office_properties %}
+                                            <div class="col-md-6 col-lg-4 col-xl-3" style="height: 25em!important;">
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <img src="{{ property.photo.url }}" alt="{{ property.name }} Photo" class="img-fluid w-100 rounded-top" style="height: 12em!important;">
+                                                        </a>
+                                                    </div>
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ property.get_option_display }}</div>
+                                                        </a>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom" style="height: 13em!important;">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <h4>{{ property.name }}</h4>
+                                                        <p>{{ property.description }}</p>
+                                                        </a>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">{{ property.price }}</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="tab-5" class="tab-pane fade show p-0">
+                                <div class="row g-4">
+                                    <div class="col-lg-12">
+                                        <div class="row g-4">
+                                            {% for property in apartment_properties %}
+                                            <div class="col-md-6 col-lg-4 col-xl-3" style="height: 25em!important;">
+                                                <div class="rounded position-relative fruite-item">
+                                                    <div class="fruite-img">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <img src="{{ property.photo.url }}" alt="{{ property.name }} Photo" class="img-fluid w-100 rounded-top" style="height: 12em!important;">
+                                                        </a>
+                                                    </div>
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">{{ property.get_option_display }}</div>
+                                                        </a>
+                                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom" style="height: 13em!important;">
+                                                        <a href="{% url 'User:property_details' property_id=property.id %}" >
+                                                        <h4>{{ property.name }}</h4>
+                                                        <p>{{ property.description }}</p>
+                                                        </a>
+                                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                                            <p class="text-dark fs-5 fw-bold mb-0">{{ property.price }}</p>
+                                                            <a href="#" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Property Shop End-->
+
+            <!-- steps start -->
+            <div class="section-regular">
+                <div class="container-regular">
+                    <div class="feature-grid wf-grid">
+                        <div style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;">
+                            <div class="feature-image-wrap">
+                                <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba92_Feature%20Image.webp" loading="lazy" alt="" class="image-cover">
+                            </div>
+                            <div class="partnership-wrap">
+                            </div>
+                        </div>
+                        <div style="transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d; opacity: 1;">
+                            <div class="margin-bottom-12">
+                                <div class="detail text-color-primary">smart property management</div>
+                            </div>
+                            <div class="margin-bottom-24">
+                                <h3>Below are the simple steps of using the website.<span class="text-color-primary"></span>
+                                </h3>
+                            </div>
+                            <p class="paragraph-regular"></p>
+                            <div class="w-layout-grid feature-list wf-grid">
+                                <div class="feature-content-block">
+                                    <div class="icon-wrap-regular">
+                                        <img src="https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/63337525695d8b5e33b44263_Two-user.svg" loading="lazy"  alt="" class="icon-regular">
+                                    </div>
+                                    <div>
+                                        <div class="margin-bottom-04">
+                                            <div class="subheading-regular">Step One</div>
+                                        </div>
+                                        <p class="paragraph-small text-color-gray-500">Sign-in into the up selecting you roll.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-content-block">
+                                    <div class="icon-wrap-regular">
+                                        <img src="https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/63337525695d8b5e33b44263_Two-user.svg" loading="lazy" alt="" class="icon-regular">
+                                    </div>
+                                    <div>
+                                        <div class="margin-bottom-04">
+                                            <div class="subheading-regular">Step Two</div>
+                                        </div>
+                                        <p class="paragraph-small text-color-gray-500">Fill in the forms request after signup then wait for request accept.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-content-block">
+                                    <div class="icon-wrap-regular">
+                                        <img src="https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/63337525695d8b5e33b44263_Two-user.svg" loading="lazy" alt="" class="icon-regular">
+                                    </div>
+                                    <div>
+                                        <div class="margin-bottom-04">
+                                            <div class="subheading-regular">Step Three</div>
+                                        </div>
+                                        <p class="paragraph-small text-color-gray-500">Access custom dashboard and see the details of your properties.</p>
+                                    </div>
+                                </div>
+                                <div class="feature-content-block">
+                                    <div class="icon-wrap-regular">
+                                        <img src="https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/63337525695d8b5e33b44263_Two-user.svg" loading="lazy" alt="" class="icon-regular">
+                                    </div>
+                                    <div>
+                                        <div class="margin-bottom-04">
+                                            <div class="subheading-regular">Step Four</div>
+                                        </div>
+                                        <p class="paragraph-small text-color-gray-500">Track your properties payments,add managers to help.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- steps end -->
+
+            <!-- Features Start -->
+            <div class="container-fluid service py-5">
+                <div class="container py-5">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-4">
+                            <a href="{% url 'User:signup' %}">
+                                <div class="service-item bg-secondary rounded border border-secondary">
+                                    <img src="../../../static/img/pricing1.jpg" class="img-fluid rounded-top w-100" alt="">
+                                    <div class="px-4 rounded-bottom">
+                                        <div class="service-content bg-primary text-center p-4 rounded">
+                                            <h5 class="text-white">Self Management</h5>
+                                            <h3 class="mb-0">10$</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a href="{% url 'User:signup' %}">
+                                <div class="service-item bg-dark rounded border border-dark">
+                                    <img src="../../../static/img/pricing2.jpg" class="img-fluid rounded-top w-100" alt="">
+                                    <div class="px-4 rounded-bottom">
+                                        <div class="service-content bg-light text-center p-4 rounded">
+                                            <h5 class="text-primary">Mid Management</h5>
+                                            <h3 class="mb-0">20$</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <a href="{% url 'User:signup' %}">
+                                <div class="service-item bg-primary rounded border border-primary">
+                                    <img src="../../../static/img/pricing4.jpg" class="img-fluid rounded-top w-100" alt="">
+                                    <div class="px-4 rounded-bottom">
+                                        <div class="service-content bg-secondary text-center p-4 rounded">
+                                            <h5 class="text-white">Full Management</h5>
+                                            <h3 class="mb-0">30$</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Features End -->
+
+
+        <!-- Vesitable Shop Start-->
+        <div class="container-fluid vesitable py-5">
+            <div class="container py-5">
+                <!-- <h1 class="mb-0">Fresh Organic Vegetables</h1> -->
+                <div class="container-regular">
+                    <div class="blog-title-wrap">
+                        <div class="margin-bottom-12">
+                            <div class="detail text-color-primary">Blog</div>
+                        </div>
+                        <h3>Property Listing</h3>
+                    </div>
+                    <div class="property-listing">
+                        <div class="blog-card">
+                            <div class="blog-card-thumbnail">
+                                <img class="image-cover" 
+                                src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a3ad82b56a1e41e2647d0_about.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="blog-text-wrapper">
+                                <h5 class="blog-title">Golden Urban House For Sale</h5>
+                                <div class="blog-created-wrapper">
+                                    <div class="blog-dot"></div>
+                                    <div class="blog-card-created">October 24, 2022</div>
+                                </div>
+                                <div class="w-row">
+                                    <div class="column w-col w-col-4">
+                                        <div class="text-block">3 Bed</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-2">1000 Sqft</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-3">3 Bath</div>
+                                    </div>
+                                </div>
+                                <a href="/post/golden-urban-house-for-sale" class="button-secondary-right-icon w-inline-block">
+                                    <div>Read More</div>
+                                    <div class="icon-regular w-embed">
+                                        <svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="currentColor" d="M15.187 11.2362L11.0895 7.13873L12.1696 6.05859L18.1111 12.0001L12.1696 17.9416L11.0895 16.8615L15.187 12.764H5.88892V11.2362H15.187Z"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="blog-card">
+                            <div class="blog-card-thumbnail">
+                                <img class="image-cover" 
+                                src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a3ad82b56a1e41e2647d0_about.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="blog-text-wrapper">
+                                <h5 class="blog-title">Golden Urban House For Sale</h5>
+                                <div class="blog-created-wrapper">
+                                    <div class="blog-dot"></div>
+                                    <div class="blog-card-created">October 24, 2022</div>
+                                </div>
+                                <div class="w-row">
+                                    <div class="column w-col w-col-4">
+                                        <div class="text-block">3 Bed</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-2">1000 Sqft</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-3">3 Bath</div>
+                                    </div>
+                                </div>
+                                <a href="/post/golden-urban-house-for-sale" class="button-secondary-right-icon w-inline-block">
+                                    <div>Read More</div>
+                                    <div class="icon-regular w-embed">
+                                        <svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="currentColor" d="M15.187 11.2362L11.0895 7.13873L12.1696 6.05859L18.1111 12.0001L12.1696 17.9416L11.0895 16.8615L15.187 12.764H5.88892V11.2362H15.187Z"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="blog-card">
+                            <div class="blog-card-thumbnail">
+                                <img class="image-cover" 
+                                src="https://assets-global.website-files.com/6549f7990b138d653774ba20/654a3ad82b56a1e41e2647d0_about.jpg" alt="" loading="lazy">
+                            </div>
+                            <div class="blog-text-wrapper">
+                                <h5 class="blog-title">Golden Urban House For Sale</h5>
+                                <div class="blog-created-wrapper">
+                                    <div class="blog-dot"></div>
+                                    <div class="blog-card-created">October 24, 2022</div>
+                                </div>
+                                <div class="w-row">
+                                    <div class="column w-col w-col-4">
+                                        <div class="text-block">3 Bed</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-2">1000 Sqft</div>
+                                    </div>
+                                    <div class="w-col w-col-4">
+                                        <div class="text-block-3">3 Bath</div>
+                                    </div>
+                                </div>
+                                <a href="/post/golden-urban-house-for-sale" class="button-secondary-right-icon w-inline-block">
+                                    <div>Read More</div>
+                                    <div class="icon-regular w-embed">
+                                        <svg fill="none" viewBox="0 0 24 24" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill="currentColor" d="M15.187 11.2362L11.0895 7.13873L12.1696 6.05859L18.1111 12.0001L12.1696 17.9416L11.0895 16.8615L15.187 12.764H5.88892V11.2362H15.187Z"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- Vesitable Shop End -->
+
+
+        <!-- Banner Section Start-->
+        <div class="section-banner">
+        <div class="banner-regular">
+            <div class="cta-block">
+                <div class="cta-icon-wrapper">
+                    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba93_Magnifying%20Glass%20Icon.png"loading="lazy" alt="" class="icon-large">
+                </div>
+            <div class="cta-text-wrap">
+                <div class="margin-bottom-16">
+                    <h4 class="heading-3">Explore available houses</h4>
+                </div>
+                <p class="paragraph-explore">EstateNexus is your go to property management app.
+                    The app has some of the highly sort after properties, and state of the art data visualization to grow your properties.
+                </p>
+            </div>
+        </div>
+        <div class="cta-search-wrapper">
+            <form action="/search" class="search w-form">
+                <div class="search-input-wrapper">
+                    <img src="https://uploads-ssl.webflow.com/6549f7990b138d653774b9b7/6549f7990b138d653774ba8d_Search%20Icon.svg" loading="lazy" alt="" class="icon-regular">
+                    <input class="search-field w-input" maxlength="256" name="query" placeholder="Search…" type="search" id="search" required="" value="">
+                </div>
+                <input type="submit" class="search-button w-button" value="Search">
+            </form>
+        </div>
+    </div>
+        </div>
+        <!-- Banner Section End -->
+
+
+        <!-- Features Start -->
+        <section>
+            <div class="padding-global">
+                <div class="container-large">
+                    <div class="padding-section-large">
+                        <div class="margin-bottom margin-xxlarge">
+                            <div class="text-align-center">
+                                <div class="max-width-large align-center">
+                                    <div class="margin-bottom margin-xsmall">
+                                        <div class="subtitle">
+                                            <strong>SPEND LESS TIME MANAGING, AND MORE TIME GROWING</strong>
+                                        </div>
+                                    </div>
+                                    <div class="margin-bottom margin-text">
+                                        <h2 class="h2-rem max-w-26-25rem">All the features you need, available on all plans</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="all-features-wrapper">
+                            <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                                <div class="flex_logo">
+                                    <div class="html-embed-2 w-embed">
+                                        <i class="fa-solid fa-coins"></i>                                   
+                                    </div>
+                                    <div data-w-id="867e7367-76dc-a705-9073-96d27f58ec70" class="tooltip-button apsolute-top-right-position">
+                                        <div class="tooltip-pricing mobile">
+                                            <i class="fa-solid fa-circle-info"></i>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="margin-bottom margin-small hover-white">
+                                <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">Accounting &amp; Financials</div>
+                            </div>
+                        </a>
+                        <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                            <div class="flex_logo">
+                                <div class="html-embed-2 w-embed">
+                                    <i class="fa-solid fa-signature"></i>
+                                </div>
+                                <div data-w-id="867e7367-76dc-a705-9073-96d27f58ec7e" class="tooltip-button apsolute-top-right-position">
+                                    <div class="tooltip-pricing mobile">
+                                        <i class="fa-solid fa-circle-info"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="margin-bottom margin-small hover-white">
+                                <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">eSignatures</div>
+                            </div>
+                        </a>
+                        <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                                <div class="flex_logo">
+                                    <div class="html-embed-2 w-embed">
+                                        <i class="fa-solid fa-headset"></i>
+                                        </div>
+                                        <div data-w-id="867e7367-76dc-a705-9073-96d27f58ec8c" class="tooltip-button apsolute-top-right-position">
+                                            <div class="tooltip-pricing mobile">
+                                                <i class="fa-solid fa-circle-info"></i>
+                                            </div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom margin-small hover-white">
+                            <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">Support</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                        <div class="flex_logo">
+                            <div class="html-embed-2 w-embed">
+                                <i class="fa-solid fa-money-bill-1"></i>
+                            </div>
+                            <div data-w-id="867e7367-76dc-a705-9073-96d27f58ec9a" class="tooltip-button apsolute-top-right-position">
+                                <div class="tooltip-pricing mobile">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+                                <div style="display: none; opacity: 0; transform: translate3d(0px, 30px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="tooltip-wrap-all-features">
+                                    <div class="tooltip">
+                                        <div class="tooltip-copy">Collect more rent and get paid faster with RapidRent powered by Stripe</div>
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom margin-small hover-white">
+                            <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">Online Payments</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                        <div class="flex_logo">
+                            <div class="html-embed-2 w-embed">
+                                <i class="fa-solid fa-clipboard-check"></i>
+                            </div>
+                            <div data-w-id="867e7367-76dc-a705-9073-96d27f58eca8" class="tooltip-button apsolute-top-right-position">
+                                <div class="tooltip-pricing mobile">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+                                <div style="display: none; opacity: 0; transform: translate3d(0px, 30px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;" class="tooltip-wrap-all-features">
+                                    <div class="tooltip">
+                                        <div class="tooltip-copy">Online rental applications automate your tenant screening, providing a detailed criminal, credit, and eviction history report.</div>
+                                        <div class="tooltip-arrow"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom margin-small hover-white">
+                            <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">Tenant Screening</div>
+                        </div>
+                    </a>
+                    <a href="{% url 'User:about' %}" class="hover_card padding-small relative-position w-inline-block">
+                                <div class="flex_logo">
+                                    <div class="html-embed-2 w-embed">
+                                        <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div data-w-id="867e7367-76dc-a705-9073-96d27f58ecb6" class="tooltip-button apsolute-top-right-position">
+                                <div class="tooltip-pricing mobile">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="margin-bottom margin-small hover-white">
+                            <div class="text-size-16px text-align-left text-align-center-mobile text-weight-medium hover-white" style="color: rgb(25, 43, 76);">Resident Portal</div>
+                        </div>
+                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+        <!-- Features End -->
+
+
+        <!-- Fact Start -->
+        <div class="container-fluid py-5">
+            <div class="container">
+                <div class="bg-light p-5 rounded">
+                    <div class="row g-4 justify-content-center">
+                        <div class="col-md-6 col-lg-6 col-xl-3">
+                            <div class="counter bg-white rounded p-5">
+                                <i class="fa fa-users text-secondary"></i>
+                                <h4>number of managers</h4>
+                                <h1>{{ manager_count }}</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-3">
+                            <div class="counter bg-white rounded p-5">
+                                <i class="fa fa-users text-secondary"></i>
+                                <h4>property owners</h4>
+                                <h1>{{ owner_count }}</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-3">
+                            <div class="counter bg-white rounded p-5">
+                                <i class="fa fa-users text-secondary"></i>
+                                <h4>number of tenants</h4>
+                                <h1>{{ tenant_count }}</h1>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-3">
+                            <div class="counter bg-white rounded p-5">
+                                <i class="fa fa-users text-secondary"></i>
+                                <h4>available properties</h4>
+                                <h1>{{ total_properties }}</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fact Start -->
+
+
+        <!-- Tastimonial Start -->
+        <div class="container-fluid testimonial py-5">
+            <div class="container py-5">
+                <div class="testimonial-header text-center">
+                    <h4 class="text-primary">Our Testimonial</h4>
+                    <h1 class="display-5 mb-5 text-dark">Our Client Saying!</h1>
+                    {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+                    <a href="{% url 'User:add_testimonial' %}" class="btn btn-primary m-4">Add Testimonial</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                <div class="owl-carousel testimonial-carousel">
+                    {% for testimonial in testimonials %}
+                        <div class="testimonial-item img-border-radius bg-light rounded p-4" style="height: 17em;">
+                            <div class="position-relative">
+                                <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
+                                <div class="mb-4 pb-4 border-bottom border-secondary">
+                                    <p class="mb-0">{{ testimonial.testimonial_text }}</p>
+                                </div>
+                                <div class="d-flex align-items-center flex-nowrap">
+                                    <div class="bg-secondary rounded">
+                                        <img src="{{ testimonial.photo.url }}" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                                    </div>
+                                    <div class="ms-4 d-block">
+                                        <h4 class="text-dark">{{ testimonial.client_name }}</h4>
+                                        <p class="m-0 pb-3">{{ testimonial.profession }}</p>
+                                        <div class="d-flex pe-5">
+                                            {% for i in testimonial.rating|times %}
+                                                <i class="fas fa-star text-primary"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="testimonial-date-wrapper">
+                                            <img src="https://uploads-ssl.webflow.com/63337525695d8ba70ab44222/6355e10dc86d7210a978aaab_Calendar%20Icon.svg" loading="lazy" alt="" class="testimonial-calendar-icon">
+                                            <div class="footnote">{{ testimonial.created_at|timesince }} ago</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Tastimonial End -->
+
+
+        <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5">
+            <div class="container py-5">
+                <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                    <div class="row g-4">
+                        <div class="col-lg-3">
+                            <a href="#">
+                                <h1 class="text-primary mb-0">EstateNexus</h1>
+                                <p class="text-secondary mb-0">property manager</p>
+                            </a>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="position-relative mx-auto">
+                                <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number" placeholder="Your Email">
+                                <button type="submit" class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white" style="top: 0; right: 0;">Subscribe Now</button>
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="d-flex justify-content-end pt-3">
+                                <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fa-brands fa-x-twitter"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i class="fab fa-youtube"></i></a>
+                                <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-5">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Why People Like us!</h4>
+                            <p class="mb-4">
+                                People love EstateNexus for its seamless property management,
+                                diverse listings, user-friendly interface, and excellent customer service.
+                            </p>
+                            <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Shop Info</h4>
+                            <a class="btn-link" href="{% url 'User:about' %}">About Us</a>
+                            <a class="btn-link" href="{% url 'User:contact-page' %}">Contact Us</a>
+                            <a class="btn-link" href="">Privacy Policy</a>
+                            <a class="btn-link" href="">Terms & Condition</a>
+                            <a class="btn-link" href="">Return Policy</a>
+                            <a class="btn-link" href="">FAQs & Help</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="d-flex flex-column text-start footer-item">
+                            <h4 class="text-light mb-3">Account</h4>
+                            <a class="btn-link" href="">My Account</a>
+                            <a class="btn-link" href="">Shop details</a>
+                            <a class="btn-link" href="">Shopping Cart</a>
+                            <a class="btn-link" href="">Wishlist</a>
+                            <a class="btn-link" href="">Order History</a>
+                            <a class="btn-link" href="">International Orders</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="footer-item">
+                            <h4 class="text-light mb-3">Contact</h4>
+                            <p>Address: 24 Westlands Rd,Nairobi</p>
+                            <p>Email: estatenexus@gmail.com</p>
+                            <p>Phone: +254 758 78004</p>
+                            <p>Payment Accepted</p>
+                            <div class="img-fluid">
+                            <img src="../../../static/img/payment.png" alt="">
+                            <img src="../../../static/img/M-PESA-logo-2 (1).png" class="mpesa" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright bg-dark py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>EstateNexus</a>, All right reserved.</span>
+                    </div>
+                    <div class="col-md-6 my-auto text-center text-md-end text-white">
+                        Designed By <a class="border-bottom" href="https://steve-rebrand.com">smb</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+
+
+        <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
+
+        
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../static/lib/easing/easing.min.js"></script>
+    <script src="../../../static/lib/waypoints/waypoints.min.js"></script>
+    <script src="../../../static/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="../../../static/lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="../../../static/js/main.js"></script>
+    <!--=============== SCROLL REVEAL ===============-->
+    <script src="../../../static/assets/js/scrollreveal.min.js"></script>
+
+    <!--=============== SWIPER JS ===============-->
+    <script src="../../../static/assets/js/swiper-bundle.min.js"></script>
+
+    <!--=============== MAIN JS ===============-->
+    <script src="../../../static/assets/js/main.js"></script>    </body>
+
+</html>

@@ -1,0 +1,405 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>EstateNexus - The Property Manager</title>
+    <!-- Simple bar CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/simplebar.css' %}">
+    <!-- Fonts CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/feather.css' %}">
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/daterangepicker.css' %}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/app-light.css' %}" id="lightTheme" disabled>
+    <link rel="stylesheet" href="{% static 'dark/css/app-dark.css' %}" id="darkTheme">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" ></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  </head>
+  <body class="vertical  dark  ">
+    <div class="wrapper">
+      <nav class="topnav navbar navbar-light">
+        <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+          <i class="fe fe-menu navbar-toggler-icon"></i>
+        </button>
+        <form class="form-inline mr-auto searchform text-muted">
+          <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search" placeholder="Type something..." aria-label="Search">
+        </form>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="dark">
+              <i class="fe fe-sun fe-16"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
+              <span class="fe fe-grid fe-16"></span>
+            </a>
+          </li>
+          <li class="nav-item nav-notif">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
+              <span class="fe fe-bell fe-16"></span>
+              <span class="dot dot-md bg-success"></span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="avatar avatar-sm mt-2">
+                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+              </span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Profile</a>
+              <a class="dropdown-item" href="#">Settings</a>
+              <a class="dropdown-item" href="#">Activities</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+        <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+          <i class="fe fe-x"><span class="sr-only"></span></i>
+        </a>
+        <nav class="vertnav navbar navbar-light">
+          <!-- nav bar -->
+          <div class="w-100 mb-4 d-flex">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'User:dashboard' %}">
+              <img src="{% static 'dark/images/home (2).png' %}" alt="estatenexus">
+            </a>
+          </div>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item dropdown">
+              <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <i class="fe fe-pie-chart fe-16"></i>
+                <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+              </a>
+              <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
+                <li class="nav-item active">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard' %}"><span class="ml-1 item-text">Main</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard-sales' %}"><span class="ml-1 item-text">E-commerce</span></a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Details</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+{#            <li class="nav-item dropdown">#}
+{#              <a href="{% url 'User:payments' %}" aria-expanded="false" class="nav-link">#}
+{#                <i class="fe fe-dollar-sign fe-16"></i>#}
+{#                <span class="ml-3 item-text">Payments</span>#}
+{#                <span class="badge badge-pill badge-primary text-center mt-1">New</span>#}
+{#              </a>#}
+{#            </li>#}
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:managers' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-users fe-16"></i>
+                <span class="ml-3 item-text">Managers</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:properties' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-home fe-16"></i>
+                <span class="ml-3 item-text">Properties</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Apps</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:calendar' %}">
+                <i class="fe fe-calendar fe-16"></i>
+                <span class="ml-3 item-text">Calendar</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Documentation</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:getting-started' %}">
+                <i class="fe fe-help-circle fe-16"></i>
+                <span class="ml-3 item-text">Getting Start</span>
+              </a>
+            </li>
+          </ul>
+          <div class="btn-box w-100 mt-5 mb-1">
+            <a href="{% url 'User:logout' %}" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
+              <i class="fe fe-power fe-12 mx-2"></i><span class="small">LogOut</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+      <main role="main" class="main-content">
+        <div class="container-fluid">
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-10 col-xl-8">
+              <div class="row align-items-center mb-4">
+                <div class="col">
+                  <h2 class="h5 page-title"><small class="text-muted text-uppercase">Invoice</small><br />#{{ invoice_id }}</h2>
+                </div>
+                <div class="col-auto">
+                  <button type="button" onclick="printDiv('invoiceContent')"  class="btn btn-secondary">Print</button>
+                  <button id="downloadButton" class="btn btn-primary">Download as PDF</button>
+                </div>
+              </div>
+              <div id="invoiceContent" class="card shadow">
+                <div class="card-body p-5">
+                  <div class="row mb-5">
+                    <div class="col-12 text-center mb-4">
+                      <img src="{% static 'dark/images/home (2).png' %}" class="navbar-brand-img brand-sm mx-auto mb-4" alt="...">
+                      <h2 class="mb-0 text-uppercase">Invoice</h2>
+                      <p class="text-muted"> {{ property_occupied.name }}<br />{{ property_occupied.address }} {{ property_occupied.county }}, {{ property_occupied.country }} </p>
+                    </div>
+                    <div class="col-md-7">
+                      <p class="small text-muted text-uppercase mb-2">Invoice from</p>
+                      <p class="mb-4">
+                        <strong>{{ property_manager.first_name }} {{ property_manager.last_name }}</strong>
+                          <br /> Property Manager
+                          <br /> P.O. Box {{ property_manager.zip_code }},
+                          {{ property_manager.address }} {{ property_manager.county }} {{ property_manager.country }}
+                          <br /> {{ property_manager.county }}, {{ property_manager.country }}
+                          <br />{{ property_manager.phone_number }}<br />
+                      </p>
+                      <p>
+                        <span class="small text-muted text-uppercase">Invoice #</span><br />
+                        <strong>{{ invoice_id }}</strong>
+                      </p>
+                    </div>
+                    <div class="col-md-5">
+                      <p class="small text-muted text-uppercase mb-2">Invoice to</p>
+                      <p class="mb-4">
+                        <strong>{{ tenant.first_name }} {{ tenant.last_name }}</strong><br /> Tenant {{ tenant.tenant_id }}<br /> {{ tenant.email }} <br /> Hse No.{{ tenant.house_number }}<br /> {{ tenant.phone_number }}<br />
+                      </p>
+                      <p>
+                        <small class="small text-muted text-uppercase">From date</small><br />
+                        <strong>{{ tenant.joined|date:"F j, Y" }}</strong>
+                      </p>
+                    </div>
+                  </div> <!-- /.row -->
+                  <table class="table table-borderless table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Mode of Payment</th>
+                        <th scope="col" class="text-right">Ammout</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                            {% for payment in payments %}
+                      <tr>
+                        <th scope="row">{{ forloop.counter }}.</th>
+                        <td>{{ payment.mode }}<br />
+                          <span class="small text-muted">{{ payment.payment_date|date }},{{ payment.payment_date|time }}</span>
+                        </td>
+                        <td class="text-right">${{ payment.amount }}</td>
+                      </tr>
+                            {% endfor %}
+                    </tbody>
+                  </table>
+                  <div class="row mt-5">
+                    <div class="col-2 text-center">
+                      <img src="{% static 'dark/assets/images/qrcode.svg' %}" class="navbar-brand-img brand-sm mx-auto my-4" alt="...">
+                    </div>
+                    <div class="col-md-5">
+                      <p class="text-muted small">
+                        <strong>Note :</strong> The Invoice has transactions made only and has no balances for the months, visit your profile for more details.</p>
+                    </div>
+                    <div class="col-md-5">
+                      <div class="text-right mr-2">
+                        <p class="mb-2 h6">
+                          <span class="text-muted">Total : </span>
+                          <span>${{ total_all_time_payments }}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div> <!-- /.row -->
+                </div> <!-- /.card-body -->
+              </div> <!-- /.card -->
+            </div> <!-- /.col-12 -->
+          </div> <!-- .row -->
+        </div> <!-- .container-fluid -->
+        <div class="modal fade modal-notif modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="defaultModalLabel">Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group list-group-flush my-n3">
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-box fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Package has uploaded successfull</strong></small>
+                        <div class="my-0 text-muted small">Package is zipped and uploaded</div>
+                        <small class="badge badge-pill badge-light text-muted">1m ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-download fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Widgets are updated successfull</strong></small>
+                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
+                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-inbox fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Notifications have been sent</strong></small>
+                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
+                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
+                      </div>
+                    </div> <!-- / .row -->
+                  </div>
+                  <div class="list-group-item bg-transparent">
+                    <div class="row align-items-center">
+                      <div class="col-auto">
+                        <span class="fe fe-link fe-24"></span>
+                      </div>
+                      <div class="col">
+                        <small><strong>Link was attached to menu</strong></small>
+                        <div class="my-0 text-muted small">New layout has been attached to the menu</div>
+                        <small class="badge badge-pill badge-light text-muted">1h ago</small>
+                      </div>
+                    </div>
+                  </div> <!-- / .row -->
+                </div> <!-- / .list-group -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Clear All</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body px-5">
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-success justify-content-center">
+                      <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Control area</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-activity fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Activity</p>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Droplet</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Upload</p>
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-users fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Users</p>
+                  </div>
+                  <div class="col-6 text-center">
+                    <div class="squircle bg-primary justify-content-center">
+                      <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+                    </div>
+                    <p>Settings</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main> <!-- main -->
+    </div> <!-- .wrapper -->
+    <script src="{% static 'dark/js/jquery.min.js' %}"></script>
+    <script src="{% static 'dark/js/popper.min.js' %}"></script>
+    <script src="{% static 'dark/js/moment.min.js' %}"></script>
+    <script src="{% static 'dark/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dark/js/simplebar.min.js' %}"></script>
+    <script src='{% static 'dark/js/daterangepicker.js' %}'></script>
+    <script src='{% static 'dark/js/jquery.stickOnScroll.js' %}'></script>
+    <script src="{% static 'dark/js/tinycolor-min.js' %}"></script>
+    <script src="{% static 'dark/js/config.js' %}"></script>
+    <script src="{% static 'dark/js/apps.js' %}"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
+        <script>
+        function downloadDivAsPDF() {
+            const invoiceContent = document.getElementById('invoiceContent');
+            html2canvas(invoiceContent).then(function(canvas) {
+                const imgData = canvas.toDataURL('image/png');
+                const doc = new jsPDF('p', 'mm');
+                doc.addImage(imgData, 'PNG', 10, 10);
+                doc.save('invoice.pdf');
+            });
+        }
+        document.getElementById('downloadButton').addEventListener('click', downloadDivAsPDF);
+    </script>
+        <script>
+        function printDiv(divName) {
+          var printContents = document.getElementById(divName).innerHTML;
+          var originalContents = document.body.innerHTML;
+
+          document.body.innerHTML = printContents;
+          window.print();
+
+          document.body.innerHTML = originalContents;
+        }
+        </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag()
+      {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-56159088-1');
+    </script>
+  </body>
+</html>
