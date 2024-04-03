@@ -5,7 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2276a77-c6a3-49ab-be6a-b755e6ae24b1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EstateNexusM/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/EstateNexusM/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add-manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add-manager.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add-tenant.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add-tenant.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/credit_card_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/credit_card_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/mpesa_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/mpesa_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/payments.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/payments.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/paypal_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/paypal_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/property-contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/property-contact.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/property-details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/property-details.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/tenant-profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/tenant-profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/estatenexus/update-password.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/estatenexus/update-password.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +124,9 @@
       <workItem from="1711847290564" duration="60924000" />
       <workItem from="1711977667290" duration="1000" />
       <workItem from="1711984236358" duration="22461000" />
+      <workItem from="1712094329341" duration="14167000" />
+      <workItem from="1712168193379" duration="2923000" />
+      <workItem from="1712174544223" duration="716000" />
     </task>
     <servers />
   </component>

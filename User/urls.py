@@ -57,6 +57,5 @@ urlpatterns = [
 
                   # mpesa payemnt
                   path('mpesa-payment/', views.mpesa_payment, name='mpesa_payment'),
-                  # path('check-payment-status/<str:invoice_id>/', views.check_payment_status,
-                  #      name='check_payment_status'),
+                  # path('mpesa-payment-callback/', views.mpesa_payment_callback, name='mpesa_payment_callback'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

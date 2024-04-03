@@ -345,95 +345,78 @@
                 </div> <!-- .col-md -->
               </div> <!-- .row -->
               <div class="row">
-                <!-- Recent Activity -->
+                  <!-- Recent Activity -->
                 <div class="col-md-12 col-lg-4 mb-4">
-                  <div class="card timeline shadow">
-                    <div class="card-header">
-                      <strong class="card-title">Recent Activity</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
-                    </div>
-                    <div class="card-body" data-simplebar style="height:355px; overflow-y: auto; overflow-x: hidden;">
-                      <h6 class="text-uppercase text-muted mb-4">Today</h6>
-                      <div class="pb-3 timeline-item item-primary">
-                        <div class="pl-5">
-                          <div class="mb-1"><strong>@Brown Asher</strong><span class="text-muted small mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
-                          <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
-                          </p>
+                    <div class="card timeline shadow">
+                        <div class="card-header">
+                            <strong class="card-title">Recent Activity</strong>
+                            <a class="float-right small text-muted" href="#!">View all</a>
                         </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-warning">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Hester Nissim</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                          <div class="row mb-3">
-                            <div class="col"><img src="{% static 'dark/assets/products/p1.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p2.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p3.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p4.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                          </div>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-success">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Kelley Sonya</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                          <div class="card d-inline-flex mb-2">
-                            <div class="card-body bg-light py-2 px-3 small rounded"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                          </div>
-                          <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <h6 class="text-uppercase text-muted mb-4">Yesterday</h6>
-                      <div class="pb-3 timeline-item item-warning">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Fletcher Everett</strong><span class="text-muted small mx-2">created new group for</span><strong>Tiny Admin</strong></div>
-                          <ul class="avatars-list mb-3">
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-1.jpg' %}">
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-4.jpg' %}">
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-3.jpg' %}">
-                              </a>
-                            </li>
-                          </ul>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-success">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Bertha Ball</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                          <div class="card d-inline-flex mb-2">
-                            <div class="card-body bg-light py-2 px-3"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                          </div>
-                          <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-danger">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Lillith Joseph</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                          <div class="row mb-3">
-                            <div class="col"><img src="{% static 'dark/assets/products/p4.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p1.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p2.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                          </div>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                    </div> <!-- / .card-body -->
-                  </div> <!-- / .card -->
-                </div> <!-- / .col-md-6 -->
+                        <div class="card-body" data-simplebar style="height:355px; overflow-y: auto; overflow-x: hidden;">
+                            <h6 class="text-uppercase text-muted mb-4">Recent Reviews</h6>
+                            {% for review in recent_reviews %}
+                            <div class="pb-3 timeline-item item-primary">
+                                <div class="pl-5">
+                                    <div class="mb-1"><strong></strong>{{ review.user.name }}<span class="text-muted small mx-2"></span><strong>{{ review.property }}</strong></div>
+                                    <div class="card-body bg-light py-2 px-3">{{ review.text }}
+                                    {% if review.image %}
+                                        <hr class="my-4">
+                                        <div class="row mb-3">
+                                        <div class="col" ><img src="{{ review.image.url }}" alt="Review Image" class="img-fluid rounded" style="height: 5em; width: 5em;"></div>
+                                        </div>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                                <p class="small text-muted ml-5 mt-1">{{ review.user }} <span class="badge badge-light">{{ review.created_at|timesince }} ago</span>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Payments</h6>
+                            {% for payment in recent_payments %}
+                            <div class="pb-3 timeline-item item-warning">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Payment of {{ payment.amount }}</strong><span class="text-muted small mx-2">made by {{ payment.tenant }}</span></div>
+                                    <p class="small text-muted">{{ payment.payment_date|timesince }} ago
+                                    </p>
+                                    {% if payment.mpesapayment %}
+                                    <p class="small text-muted">Payment Method: MPesa</p>
+                                    <p class="small text-muted">Phone Number: {{ payment.mpesapayment.phone_number }}</p>
+                                    {% elif payment.creditcardpayment %}
+                                    <p class="small text-muted">Payment Method: Credit Card</p>
+                                    <p class="small text-muted">Card Number: {{ payment.creditcardpayment.card_number }}</p>
+                                    {% elif payment.paypalpayment %}
+                                    <p class="small text-muted">Payment Method: Paypal</p>
+                                    <p class="small text-muted">Email: {{ payment.paypalpayment.email }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Manager Requests</h6>
+                            {% for manager_request in recent_manager_requests %}
+                            <div class="pb-3 timeline-item item-success">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Manager Request</strong><span class="text-muted small mx-2">{{ manager_request.description }}</span></div>
+                                    <p class="small text-muted">{{ manager_request.joined|timesince }} ago
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Tenant Requests</h6>
+                            {% for tenant_request in recent_tenant_requests %}
+                            <div class="pb-3 timeline-item item-danger">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Tenant Request</strong><span class="text-muted small mx-2">{{ tenant_request.description }}</span></div>
+                                    <p class="small text-muted">{{ tenant_request.joined|timesince }} ago
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
+                </div>
+                  <!-- Recent Activity Ende -->
                 <!-- Striped rows -->
                 <div class="col-md-12 col-lg-8">
                   <div class="card shadow" style="height: 29em!important; overflow: hidden!important;">
@@ -876,7 +859,7 @@
         });
       }
     </script>
-    <script src="{% static 'dark/js/apps.js' %}"></script>
+{#    <script src="{% static 'dark/js/apps.js' %}"></script>#}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
     <script>

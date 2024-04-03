@@ -183,10 +183,10 @@
                     <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-user me-1"></i> Tenant</a>
                   </li>
                 </ul>
-              {% if messages %}
+              {% if msg %}
                 <div class="col-12 mb-4">
                   <div class="alert alert-success alert-dismissible fade show" role="alert">
-                          {% for message in messages %}
+                          {% for message in msg %}
                     <strong></strong> {{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
                          {% endfor %}
                       <span aria-hidden="true">×</span>
