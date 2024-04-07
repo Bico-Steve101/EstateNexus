@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-xk%x%h@b%$6dj3$td%ur_x)houh7q6*z6g_(sp9*q22i9zefns
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'https://38be-41-80-116-140.ngrok-free.app']
+CORS_ORIGIN_WHITELIST = [
+    'https://38be-41-80-116-140.ngrok-free.app',
+
+]
 
 TIME_ZONE = 'Africa/Nairobi'
 USE_TZ = True
@@ -161,8 +165,8 @@ MPESA_ENVIRONMENT = 'sandbox'
 
 # Credentials for the daraja app
 
-MPESA_CONSUMER_KEY = 'RskGdAOTa0SrS5glvYISAJifiYk3HFVB4TDWTRDp015Ck8iK'
-MPESA_CONSUMER_SECRET = 'fIPGx6beNEDA0j3sNa2ohMtGYpccwebvuFAcpb7iBob8box8GwBALlx1DgcDnfAI'
+MPESA_CONSUMER_KEY = 'sGxb5imn3ePLbcNKeaUiVKpIxNtWQkO8DDH6qEJJpCZGFwGy'
+MPESA_CONSUMER_SECRET = 'S55sSNaKNWUS1TsG7DTWxZdgmlULDhAqRSGGCfzp0YGNaoJILwKfGwjRAJLG39ki'
 
 # Shortcode to use for transactions. For sandbox  use the Shortcode 1 provided on test credentials page
 

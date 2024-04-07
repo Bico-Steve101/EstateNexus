@@ -57,5 +57,7 @@ urlpatterns = [
 
                   # mpesa payemnt
                   path('mpesa-payment/', views.mpesa_payment, name='mpesa_payment'),
-                  # path('mpesa-payment-callback/', views.mpesa_payment_callback, name='mpesa_payment_callback'),
+                  path('mpesa/callback/', views.mpesa_callback, name='mpesa_callback'),
+                  path('token/', views.getAccessToken, name='token'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,8 +9,9 @@ from io import BytesIO
 from itertools import chain
 import pandas as pd
 from celery.utils.log import get_task_logger
+from django.conf import settings
 
-from django.contrib import messages as msg
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -24,6 +25,10 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django_daraja.mpesa.core import MpesaClient
+from rest_framework import response
+
+from .credentials import MpesaAccessToken, LipanaMpesaPassword, MpesaPaybill
+from .mpesa_credentials import LipanaMpesaPpassword
 
 from .tasks import send_scheduled_messages
 from twilio.rest import Client
@@ -33,7 +38,7 @@ from User.forms import PropertyForm, ManagerForm, TenantForm, SignUpForm, Paypal
     CreditCardPaymentForm, MPesaPaymentForm, CustomPasswordChangeForm, TestimonialForm, SendMessageForm, \
     ScheduledMessageForm, MessageForm, ReviewForm
 from User.models import Property, Manager, Tenant, PaypalPayment, CreditCardPayment, MPesaPayment, ManagerRequest, \
-    TenantRequest, User, Testimonial, ScheduledMessage, Message, ChatMessage, Review, Payment
+    TenantRequest, User, Testimonial, ScheduledMessage, Message, ChatMessage, Review, Payment, MpesaResponseBody
 
 
 def get_payment_mode(payment):
@@ -208,7 +213,7 @@ def user_login(request):
                 login(request, user)
                 return redirect('User:index')
 
-            msg.error(request, 'Invalid email or password.')
+            messages.error(request, 'Invalid email or password.')
     else:
         form = AuthenticationForm()
     context = {
@@ -260,11 +265,11 @@ def update_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            msg.success(request, 'Your password was updated successfully. 😊 You were automatically logged in and '
+            messages.success(request, 'Your password was updated successfully. 😊 You were automatically logged in and '
                                       'can continue your session!.')
             return redirect('User:update-password')
         else:
-            msg.error(request, 'There was an error updating your password. Please try again, or contact us if '
+            messages.error(request, 'There was an error updating your password. Please try again, or contact us if '
                                     'you continue to have problems.!')
     else:
         form = CustomPasswordChangeForm(request.user)
@@ -291,9 +296,12 @@ def dashboard(request):
     tenant_requests = TenantRequest.objects.filter(property__user=request.user, joined__gte=five_days_ago)
 
     # Fetch recent payments for each payment method
-    recent_mpesa_payments = MPesaPayment.objects.filter(tenant__property__user=request.user, payment_date__gte=five_days_ago)
-    recent_credit_card_payments = CreditCardPayment.objects.filter(tenant__property__user=request.user, payment_date__gte=five_days_ago)
-    recent_paypal_payments = PaypalPayment.objects.filter(tenant__property__user=request.user, payment_date__gte=five_days_ago)
+    recent_mpesa_payments = MPesaPayment.objects.filter(tenant__property__user=request.user,
+                                                        payment_date__gte=five_days_ago)
+    recent_credit_card_payments = CreditCardPayment.objects.filter(tenant__property__user=request.user,
+                                                                   payment_date__gte=five_days_ago)
+    recent_paypal_payments = PaypalPayment.objects.filter(tenant__property__user=request.user,
+                                                          payment_date__gte=five_days_ago)
 
     # Combine all recent payments into one queryset
     recent_payments = list(recent_mpesa_payments) + list(recent_credit_card_payments) + list(recent_paypal_payments)
@@ -410,7 +418,7 @@ def add_managers(request):
             photo = form.cleaned_data['photo']
 
             if property_instance.manager:
-                msg.error(request, 'This property already has a manager assigned. 😊')
+                messages.error(request, 'This property already has a manager assigned. 😊')
             else:
                 manager_request = ManagerRequest(property=property_instance, user=request.user, first_name=first_name,
                                                  last_name=last_name, email=email, description=description,
@@ -420,7 +428,7 @@ def add_managers(request):
                                                  photo=photo)
                 manager_request.save()
 
-                msg.success(request, 'Manager request sent successfully. 😊')
+                messages.success(request, 'Manager request sent successfully. 😊')
                 return redirect('User:index')
     else:
         form = ManagerForm()
@@ -452,11 +460,11 @@ def respond_to_request(request, request_id, response):
             property_instance.manager = new_manager
             property_instance.save()
         except IntegrityError:
-            msg.error(request, 'An error occurred while creating the Manager object.')
+            messages.error(request, 'An error occurred while creating the Manager object.')
     try:
         manager_request.delete()
     except Exception as e:
-        msg.error(request, 'An error occurred while deleting the ManagerRequest object.')
+        messages.error(request, 'An error occurred while deleting the ManagerRequest object.')
     return redirect('User:dashboard')
 
 
@@ -484,11 +492,11 @@ def add_tenant(request):
             house_number = form.cleaned_data['house_number']
 
             if property_instance.tenant:
-                msg.error(request, 'A tenant with this email already exists for this property.')
+                messages.error(request, 'A tenant with this email already exists for this property.')
             elif not no_rooms:
-                msg.error(request, 'The number of rooms must be provided.')
+                messages.error(request, 'The number of rooms must be provided.')
             elif not occupants:
-                msg.error(request, 'The number of occupants must be provided.')
+                messages.error(request, 'The number of occupants must be provided.')
             else:
                 manager = property_instance.manager
 
@@ -511,7 +519,7 @@ def add_tenant(request):
                     house_number=house_number
                 )
                 tenant_request.save()
-                msg.success(request, 'Tenant request sent successfully. 😊')
+                messages.success(request, 'Tenant request sent successfully. 😊')
                 return redirect('User:index')
     else:
         form = TenantForm()
@@ -545,11 +553,11 @@ def respond_to_tenant_request(request, request_id, response):
                 manager=property_instance.manager,  # Assign the manager of the property to the tenant
             )
         except IntegrityError:
-            msg.error(request, 'An error occurred while creating the Tenant object.')
+            messages.error(request, 'An error occurred while creating the Tenant object.')
     try:
         tenant_request.delete()
     except Exception as e:
-        msg.error(request, 'An error occurred while deleting the TenantRequest object.')
+        messages.error(request, 'An error occurred while deleting the TenantRequest object.')
     return redirect('User:dashboard')
 
 
@@ -622,7 +630,7 @@ def property_contact(request, property_id):
                 review.user = request.user
                 review.property = property
                 review.save()
-                return redirect('User:property_contact', property_id=property_id)
+                return redirect('User:property-contact', property_id=property_id)
         else:
             form = ReviewForm()
 
@@ -768,50 +776,70 @@ def getAccessToken(request):
     consumer_secret = 'S55sSNaKNWUS1TsG7DTWxZdgmlULDhAqRSGGCfzp0YGNaoJILwKfGwjRAJLG39ki'
     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
 
-    response = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+    mpesa_access_token = json.loads(r.text)
+    validated_mpesa_access_token = mpesa_access_token['access_token']
 
-    if response.status_code == 200:
-        json_response = response.json()
-        access_token = json_response['access_token']
-        return HttpResponse(access_token)
-    else:
-        return HttpResponse('Failed to get access token')
+    return HttpResponse(validated_mpesa_access_token)
+
+
+logger = logging.getLogger(__name__)
 
 
 @login_required
 def mpesa_payment(request):
     tenant = Tenant.objects.get(user=request.user)
     testimonial = Testimonial.objects.order_by('?').first()
+
     if request.method == 'POST':
+        logger.debug("POST data: %s", request.POST)
+        print("POST data:", request.POST)
         form = MPesaPaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
             if payment.amount < 1:
-                msg.error(request, 'Minimum M-pesa payment amount is 10.')
+                messages.error(request, 'Minimum M-pesa payment amount is 10.')
                 return render(request, 'EstateNexus/dark/mpesa_payment.html', {'form': form, 'tenant': tenant})
 
-            # Create a MpesaClient instance
-            client = MpesaClient()
+            account_reference = str(tenant.id)
+            access_token = MpesaAccessToken.validated_mpesa_access_token
+            phone_number = form.cleaned_data['phone_number']
+            amount = int(payment.amount)
+            transaction_desc = 'Payment for EstateNexus'
+            callback_url = 'https://38be-41-80-116-140.ngrok-free.app/mpesa/callback/'
+            if not access_token:
+                messages.error(request, 'Failed to obtain M-Pesa access token.')
+                return render(request, 'EstateNexus/dark/mpesa_payment.html', {'form': form, 'tenant': tenant})
 
-            # Define the Lipa na M-Pesa Online Payment parameters
-            PhoneNumber = form.cleaned_data['phone_number']
-            Amount = int(payment.amount)  # Convert the amount to an integer
-            AccountReference = str(request.user.id)  # Pass the user's ID as the account reference
-            TransactionDesc = 'Payment for invoice 001'
-            CallBackURL = 'https://api.darajambili.com/express-payment/mpesa/callback/'
+            # Construct the request data
+            api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+            headers = {'Authorization': f'Bearer {access_token}', 'Content-Type': 'application/json'}
+            request_data = {
+                "BusinessShortCode": MpesaPaybill.Business_short_code,
+                "Password": MpesaPaybill.decode_password,
+                "Timestamp": MpesaPaybill.date_time,
+                "TransactionType": "CustomerPayBillOnline",
+                "Amount": amount,
+                "PartyA": phone_number,
+                "PartyB": MpesaPaybill.Business_short_code,
+                "PhoneNumber": phone_number,
+                "CallBackURL": callback_url,
+                "AccountReference": account_reference,
+                "TransactionDesc": transaction_desc
+            }
 
-            # Make the Lipa na M-Pesa Online Payment API request
-            response = client.stk_push(PhoneNumber, Amount, AccountReference, TransactionDesc, CallBackURL)
-
-            # Check if the request was successful
-            if response.status_code == 200 and response.json().get('ResponseCode') == '0':
-                msg.info(request, 'STK push sent. Please check your phone to complete the payment.')
-                return redirect('User:tenant-profile')
+            response = requests.post(api_url, json=request_data, headers=headers)
+            response_data = response.json()
+            if response_data.get('ResponseCode') == '0':
+                # return HttpResponse("STK push initiated successfully. Redirecting to success page...")
+                print("API request successful:", response.text)
             else:
-                msg.error(request, 'M-Pesa payment was unsuccessful. Please try again.')
-
+                error_message = response_data.get('errorMessage', 'Failed to initiate STK push.')
+                messages.error(request, error_message)
+                return redirect('User:mpesa_payment')
     else:
         form = MPesaPaymentForm()
+
     context = {
         'testimonial': testimonial,
         'form': form,
@@ -820,41 +848,130 @@ def mpesa_payment(request):
     return render(request, 'EstateNexus/dark/mpesa_payment.html', context)
 
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+@csrf_exempt
+def register_urls(request):
+    access_token = MpesaAccessToken.validated_mpesa_access_token
+    api_url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl"
+    headers = {"Authorization": "Bearer %s" % access_token}
+    options = {"ShortCode": LipanaMpesaPpassword.Test_c2b_shortcode,
+               "ResponseType": "Completed",
+               "ConfirmationURL": "https://79372821.ngrok.io/api/v1/c2b/confirmation",
+               "ValidationURL": "https://79372821.ngrok.io/api/v1/c2b/validation"}
+    response = requests.post(api_url, json=options, headers=headers)
+
+    return HttpResponse(response.text)
+
+
 @csrf_exempt
 def mpesa_callback(request):
     if request.method == 'POST':
-        # Parse the JSON request body
-        data = json.loads(request.body)
+        logger.debug("POST data: %s", request.body)
+        print("POST data:", request.POST)
 
-        # Extract the transaction details
-        transaction_id = data.get('Body', {}).get('stkCallback', {}).get('CheckoutRequestID')
-        result_code = data.get('Body', {}).get('stkCallback', {}).get('ResultCode')
-        result_desc = data.get('Body', {}).get('stkCallback', {}).get('ResultDesc')
-        amount = data.get('Body', {}).get('stkCallback', {}).get('CallbackMetadata', {}).get('Item', [{}])[0].get(
-            'Value')
-        phone_number = data.get('Body', {}).get('stkCallback', {}).get('CallbackMetadata', {}).get('Item', [{}])[1].get(
-            'Value')
-        tenant_id = data.get('Body', {}).get('stkCallback', {}).get('CallbackMetadata', {}).get('Item', [{}])[2].get(
-            'Value')
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+        except json.JSONDecodeError as e:
+            logger.error("Error decoding JSON: %s", str(e))
+            error_response_data = {
+                "ResultCode": 1,
+                "ResultDesc": "Invalid JSON format"
+            }
+            return JsonResponse(error_response_data, status=400)
 
-        # Check the result code
-        if result_code == 0:
-            # Payment was successful
-            # Create a new MPesaPayment object
-            tenant = Tenant.objects.get(id=tenant_id)  # Get the tenant using the ID
+        # Create MpesaResponseBody object if body exists
+        if body:
+            mpesa = MpesaResponseBody.objects.create(body=body)
+
+        tenant_id = body.get('AccountReference')
+
+        try:
+            # Retrieve the tenant based on the tenant ID (account reference)
+            tenant = Tenant.objects.get(id=tenant_id)
+
+            # Create the M-Pesa payment associated with the tenant
             payment = MPesaPayment.objects.create(
                 tenant=tenant,
-                amount=amount,
-                phone_number=phone_number,
-                payment_id=transaction_id,
-                status='completed'
+                phone_number=body.get('PhoneNumber'),
+                amount=body.get('Amount'),
+                # transaction_type=body.get('TransactionType'),
+                # checkout_request_id=body.get('CheckoutRequestID'),
+                status=0
+                # Add other fields as needed
             )
-            return JsonResponse({'ResultCode': 0, 'ResultDesc': 'Success'})
-        else:
-            # Payment failed
-            return JsonResponse({'ResultCode': 1, 'ResultDesc': result_desc})
 
-    return JsonResponse({'message': 'Invalid request method'}, status=400)
+            # Return success response
+            response_data = {
+                "ResultCode": 0,
+                "ResultDesc": "Accepted"
+            }
+            return JsonResponse(response_data)
+
+        except Tenant.DoesNotExist:
+            # Handle the case where the tenant is not found
+            logger.error("Tenant not found with ID: %s", tenant_id)
+            error_response_data = {
+                "ResultCode": 1,
+                "ResultDesc": "Tenant not found"
+            }
+            return JsonResponse(error_response_data, status=400)
+    else:
+        # Return an error response if the request method is not POST
+        error_response_data = {
+            "ResultCode": 1,
+            "ResultDesc": "Invalid request method"
+        }
+        return JsonResponse(error_response_data, status=400)
+
+@csrf_exempt
+def validation(request):
+    context = {
+        "ResultCode": 0,
+        "ResultDesc": "Accepted"
+    }
+    return JsonResponse(dict(context))
+
+
+@csrf_exempt
+def confirmation(request):
+    # Decode the request body and load the JSON data
+    mpesa_body = request.body.decode('utf-8')
+    mpesa_payment = json.loads(mpesa_body)
+
+    # Extract relevant information from the M-Pesa transaction data
+    tenant_id = mpesa_payment.get('AccountReference')
+
+    try:
+        # Retrieve the tenant based on the tenant ID (account reference)
+        tenant = Tenant.objects.get(id=tenant_id)
+
+        # Create the M-Pesa payment associated with the tenant
+        payment = MPesaPayment.objects.create(
+            tenant=tenant,
+            phone_number=mpesa_payment['PhoneNumber'],
+            amount=mpesa_payment['Amount'],
+            reference=mpesa_payment['BillRefNumber'],
+            transaction_type=mpesa_payment['TransactionType'],
+            transaction_id=mpesa_payment['TransID'],
+            # Add other fields as needed
+        )
+
+        # Return success response
+        response_data = {
+            "ResultCode": 0,
+            "ResultDesc": "Accepted"
+        }
+        return JsonResponse(response_data)
+
+    except Tenant.DoesNotExist:
+        # Handle the case where the tenant is not found
+        error_response_data = {
+            "ResultCode": 1,
+            "ResultDesc": "Tenant not found"
+        }
+        return JsonResponse(error_response_data, status=400)
 
 
 @login_required
@@ -866,14 +983,14 @@ def paypal_payment(request):
         if form.is_valid():
             payment = form.save(commit=False)
             if payment.amount < 10:
-                msg.error(request, 'Minimum PayPal payment amount is 10.')
+                messages.error(request, 'Minimum PayPal payment amount is 10.')
                 return render(request, 'EstateNexus/dark/paypal_payment.html', {'form': form, 'tenant': tenant})
             payment.tenant = tenant
             payment.save()
-            msg.success(request, 'Paypal payment was successful.')
+            messages.success(request, 'Paypal payment was successful.')
             return redirect('User:tenant-profile')
         else:
-            msg.error(request, 'Paypal payment was unsuccessful. Please try again.')
+            messages.error(request, 'Paypal payment was unsuccessful. Please try again.')
     else:
         form = PaypalPaymentForm()
     context = {
@@ -893,14 +1010,14 @@ def credit_card_payment(request):
         if form.is_valid():
             payment = form.save(commit=False)
             if payment.amount < 10:
-                msg.error(request, 'Minimum Credit-Card payment amount is 10.')
+                messages.error(request, 'Minimum Credit-Card payment amount is 10.')
                 return render(request, 'EstateNexus/dark/credit_card_payment.html', {'form': form, 'tenant': tenant})
             payment.tenant = tenant
             payment.save()
-            msg.success(request, 'Credit card payment was successful.')
+            messages.success(request, 'Credit card payment was successful.')
             return redirect('User:tenant-profile')
         else:
-            msg.error(request, 'Credit card payment was unsuccessful. Please try again.')
+            messages.error(request, 'Credit card payment was unsuccessful. Please try again.')
     else:
         form = CreditCardPaymentForm()
     context = {
@@ -930,7 +1047,7 @@ def send_message(request, property_id):
 
             # Check if the message is empty
             if not message.strip():
-                msg.error(request, 'Message cannot be empty.')
+                messages.error(request, 'Message cannot be empty.')
                 return redirect('User:payments', property_id=property_id)
 
             try:
@@ -939,10 +1056,10 @@ def send_message(request, property_id):
                     from_=twilio_phone_number,
                     to=tenant.phone_number
                 )
-                msg.success(request, 'Message sent successfully!')
+                messages.success(request, 'Message sent successfully!')
                 logger.info(f'Message sent to tenant {tenant_id}.')
             except Exception as e:
-                msg.error(request, f'Failed to send message: {str(e)}')
+                messages.error(request, f'Failed to send message: {str(e)}')
                 logger.error(f'Failed to send message to tenant {tenant_id}: {str(e)}')
 
     return redirect('User:payments', property_id=property_id)
@@ -962,11 +1079,11 @@ def schedule_message(request, property_id):
             try:
                 scheduled_message = form.save()
                 send_scheduled_messages.apply_async()  # Schedule the task
-                msg.success(request, 'Scheduled message added successfully!')
+                messages.success(request, 'Scheduled message added successfully!')
             except Exception as e:
-                msg.error(request, f'Failed to add scheduled message:{str(e)}')
+                messages.error(request, f'Failed to add scheduled message:{str(e)}')
         else:
-            msg.error(request, f'Failed to schedule message: {form.errors}')
+            messages.error(request, f'Failed to schedule message: {form.errors}')
         return redirect('User:payments', property_id=property_id)
 
 

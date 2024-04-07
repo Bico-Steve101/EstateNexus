@@ -128,7 +128,7 @@
             <h1 class="text-center text-white display-6">M-pesa Payment</h1>
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'User:tenant-profile' %}">{{ tenant.first_name }}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'User:tenant-profile' tenant_id=tenant.id %}">{{ tenant.first_name }}</a></li>
                 <li class="breadcrumb-item active text-white">Make Payment</li>
             </ol>
         </div>
@@ -156,16 +156,16 @@
                         <div class="form-divider"></div>
                         <div class="w-users-userformfooter form-footer">
                             <span class="text-color-gray-500">Cancel payment:</span>
-                            <a href="{% url 'User:tenant-profile' %}">Cancel</a>
+                            <a href="{% url 'User:tenant-profile' tenant_id=tenant.id %}">Cancel</a>
                         </div>
                         <div class="form-divider"></div>
 
                     </form>
-                            {%  if msg %}
+                            {%  if messages  %}
                     <div class="w-users error-state">
                         <div class="user-form-error-msg">
                             We're having trouble completing your payments. Please try again, or contact us if you continue to have problems.
-                              {% for message in msg %}
+                              {% for message in messages  %}
                             <p style="color: red;">{{ message }}</p>
                             <p{% if message.tags %} class="{{ message.tags }}"{% endif %}></p>
                               {% endfor %}

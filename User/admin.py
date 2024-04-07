@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 from .models import User, Manager, Property, Tenant, Review, ChatMessage, MPesaPayment, CreditCardPayment, \
-    PaypalPayment, ManagerRequest, TenantRequest, Testimonial, ScheduledMessage, Message
+    PaypalPayment, ManagerRequest, TenantRequest, Testimonial, ScheduledMessage, Message, MpesaResponseBody
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -13,6 +13,8 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 
 admin.site.register(Message)
+
+admin.site.register(MpesaResponseBody)
 
 
 class ManagerAdmin(admin.ModelAdmin):
