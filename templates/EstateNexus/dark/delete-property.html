@@ -237,11 +237,11 @@
                             <div class="row">
                                 <div class="mb-3 col-md-6">
                                     <label for="id_name" class="form-label">Name</label>
-                                    <input class="form-control" type="text" id="id_name" name="name" autofocus>
+                                    <input class="form-control" type="text" id="id_name" name="name" value="{{ property.name }}" autofocus>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_option" class="form-label">Option</label>
-                                    <select name="option" class="form-select" required="" id="id_option">
+                                    <select name="option" class="form-select" required="" data-value="{{ property.option }}" id="id_option">
                                       <option value="" selected="">---------</option>
 
                                       <option value="rent">Rent</option>
@@ -256,30 +256,30 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="id_description" name="description" rows="3" style="height: 3px;"></textarea>
+                                    <textarea class="form-control" id="id_description" placeholder="{{ property.description }}" name="description" rows="3" style="height: 3px;"></textarea>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label" for="id_phoneNumber">Phone Number</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text">KE (+254)</span>
-                                        <input type="in" id="id_phoneNumber" name="phone_number" class="form-control"  placeholder="712 345 678">
+                                        <input type="in" id="id_phoneNumber" name="phone_number" class="form-control" value="{{ property.phone_number }}"  placeholder="712 345 678">
                                     </div>
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_address" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="id_address" name="address" placeholder="Address">
+                                    <input type="text" class="form-control" id="id_address" value="{{ property.address }}" name="address" placeholder="Address">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_county" class="form-label">County</label>
-                                    <input class="form-control" type="text" id="id_county" name="county" placeholder="Kisumu">
+                                    <input class="form-control" type="text" id="id_county" value="{{ property.county }}" name="county" placeholder="Kisumu">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_zipCode" class="form-label">Zip Code</label>
-                                    <input type="text" class="form-control" id="id_zipCode" name="zip_code" placeholder="000000" maxlength="6">
+                                    <input type="text" class="form-control" id="id_zipCode" value="{{ property.zip_code }}" name="zip_code" placeholder="000000" maxlength="6">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label class="form-label" for="id_country">Country</label>
-                                    <select id="id_country" class="form-select" name="country">
+                                    <select id="id_country" class="form-select" data-value="{{ property.country }}" name="country">
                                       <option value="" selected="">---------</option>
 
                                         <option value="Burundi">Burundi</option>
@@ -304,7 +304,7 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_type" class="form-label">Type</label>
-                                    <select name="type" required="" class="form-select" id="id_type">
+                                    <select name="type" required="" class="form-select" data-value="property.type" id="id_type">
                                       <option value="" selected="">---------</option>
 
                                       <option value="apartment">Apartment</option>
@@ -339,7 +339,7 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_category" class="form-label">Category</label>
-                                    <select name="category" class="form-select" required="" id="id_category">
+                                    <select name="category" class="form-select" data-value="{{ property.category }}" required="" id="id_category">
                                       <option value="" selected="">---------</option>
 
                                       <option value="residential">Residential</option>
@@ -372,7 +372,7 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_zoning" class="form-label">Zoning</label>
-                                    <select name="zoning" class="form-select" required="" id="id_zoning">
+                                    <select name="zoning" class="form-select" property="{{ property.zoning }}" required="" id="id_zoning">
                                       <option value="" selected="">---------</option>
 
                                       <option value="residential">Residential</option>
@@ -415,28 +415,21 @@
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_size" class="form-label">Size</label>
-                                    <input type="text" class="form-control" id="id_size" name="size" placeholder="100" maxlength="6">
+                                    <input type="text" class="form-control" id="id_size" value="{{ property.size }}" name="size" placeholder="100" maxlength="6">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_special_feature" class="form-label">Special Feature</label>
-                                    <input type="text" class="form-control" id="id_special_feature" name="special_feature" placeholder="Pool, Lake View" maxlength="255">
+                                    <input type="text" class="form-control" id="id_special_feature" name="special_feature" value="{{ property.special_feature }}" placeholder="Pool, Lake View" maxlength="255">
                                 </div>
                                 <div class="mb-3 col-md-6">
                                     <label for="id_price" class="form-label">Price</label>
-                                    <input type="text" class="form-control" id="id_price" name="price" placeholder="1000" maxlength="10">
+                                    <input type="text" class="form-control" id="id_price" name="price" value="{{ property.price }}" placeholder="1000" maxlength="10">
                                 </div>
                                  <div class="mb-3 col-md-6">
                                     <label class="form-label" for="id_company">Company:</label>
-                                    <input type="text" class="form-control" name="company" maxlength="255" required="" id="id_company">
+                                    <input type="text" class="form-control" name="company" maxlength="255" value="{{ property.company }}" required="" id="id_company">
                                 </div>
-
                                 <!-- Add other fields here according to your models.py -->
-                            </div>
-                            <div class="mt-2">
-                                <button type="submit" value="Save" class="btn btn-primary me-2" name="_save">Save Property</button>
-                                <input type="submit" value="Save and add another" class="btn btn-primary me-2" name="_addanother">
-                                <input type="submit" value="Save and continue editing" class="btn btn-primary me-2" name="_continue">
-                                <button type="reset" class="btn btn-outline-secondary">Cancel</button>
                             </div>
                         {% if form.errors %}
                     <div class="mb-3 col-12 mb-0">
@@ -453,6 +446,32 @@
                     </div>
                 </form>
                   <!-- /Account -->
+                </div>
+                <div class="card">
+                  <h5 class="card-header mb-4">Delete Account</h5>
+                  <div class="card-body">
+                    <div class="mb-3 col-12 mb-0">
+                      <div class="alert alert-warning">
+                        <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete "{{ object.name }}"?</h6>
+                        <p class="mb-0">Once you delete your property, there is no going back. Please be certain.</p>
+                      </div>
+                    </div>
+                    <form id="formAccountDeactivation"  method="post" action="{% url 'User:delete_property' property.id %}" onsubmit="return false">
+                        {% csrf_token %}
+                        <div class="form-check  mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="accountActivation"
+                          id="accountActivation"
+                        />
+                        <label class="form-check-label mt-1" for="accountActivation"
+                          >I confirm my property deletion</label
+                        >
+                      </div>
+                      <button type="submit" class="btn btn-danger deactivate-account">Delete Property</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>

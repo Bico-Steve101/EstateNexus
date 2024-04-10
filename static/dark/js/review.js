@@ -1,5 +1,5 @@
     // Get the modal
-    var modal = document.getElementById("myModal");
+    var modal = document.getElementById("reviewmyModal");
 
     // Get the image and insert it inside the modal
     var img = document.getElementsByClassName("review-image");

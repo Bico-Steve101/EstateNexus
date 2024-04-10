@@ -51,13 +51,24 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="avatar avatar-sm mt-2">
-                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                <img src="{{user.avatar.url}}" alt="..." class="avatar-img rounded-circle">
               </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Settings</a>
-              <a class="dropdown-item" href="#">Activities</a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                {% if user.role == 'owner' %}
+                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'manager' %}
+                    <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'tenant' %}
+                    <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                {% endif %}
+                <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                {% else %}
+                <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                 {% endif %}
             </div>
           </li>
         </ul>
@@ -184,8 +195,12 @@
                             </div>
                               {% if user.role == 'owner' or user.role == 'manager' %}
                             <div class="col mb-2">
-                              <button type="button" class="btn btn-primary">Edit</button>
-                              <button type="button" class="btn btn-secondary">Delete</button>
+                            <a href="{% url 'User:edit_property' property.id %}">
+                                <button type="button" class="btn btn-primary">Edit</button>
+                            </a>
+                                <a href="{% url 'User:delete_property' property.id %}">
+                                    <button type="button" class="btn btn-secondary">Delete</button>
+                                </a>
                               <a href="{% url 'User:property-contact' property_id=property.id %}">
                               <button type="button" class="btn btn-secondary">Mesages</button>
                               </a>
@@ -213,8 +228,8 @@
                         </div>
                         <div class="col pr-0">
                           <p class="small text-light mb-0">Monthly Sales</p>
-                          <span class="h3 mb-0 text-white">$1250</span>
-                          <span class="small text-muted">+5.5%</span>
+                          <span class="h3 mb-0 text-white">{{ total_monthly_payments }}</span>
+                          <span class="small text-muted">{{ digit_difference }}%</span>
                         </div>
                       </div>
                     </div>
@@ -237,8 +252,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
                   {% else %}
+                </div>
               <div class="col-md-6 col-xl-3 mb-4">
                   <div class="card shadow bg-primary text-white">
                     <div class="card-body">
@@ -273,8 +288,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
                   {% endif %}
+              </div>
                 <div class="col-md-6 ml-3">
                     <div class="card shadow mb-4">
                       <div class="card-body">
@@ -303,8 +318,8 @@
             </div>
           </div> <!-- .row -->
         </div> <!-- .container-fluid -->
-          {% if user.role == 'owner' or user.role == 'manager' %}
         <div class="row">
+          {% if user.role == 'owner' or user.role == 'manager' %}
             <div class="col-md-12 grid-margin stretch-card">
               <div class="card">
                 <div class="card-body">
@@ -409,9 +424,9 @@
                   </div>
                 </div>
               </div>
+          {% endif %}
         </div>
             <!-- end section -->
-          {% endif %}
           <!-- .card -->
         <div class="card shadow mb-4">
           <div class="card-header">
@@ -480,35 +495,17 @@
             <label  class="form-check-label mt-1" for="collapseAllCheckbox">Collapse all</label>
           </div>
             <h6 class="mt-n4 text-lg-center">Add a Review</h6>
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="review_form" novalidate>
               {% csrf_token %}
               <div class="form-group">
                 <label for="text"></label>
-                <textarea class="form-control bg-light" id="text" name="text" rows="2"></textarea>
+                <textarea class="form-control bg-light" id="text" name="text" rows="2" required></textarea>
               </div>
-              <div class="form-group">
-                   <div class="button-wrapper">
-                                <label for="image">Attach Image:</label>
-                                <label for="id_photo" class="btn btn-primary mt-2  ml-1" tabindex="0">
-                                    <i class="fe fe-paperclip"></i>
-                                </label>
-                                 <input
-                                        type="file"
-                                        id="id_photo"
-                                        name="photo"
-                                        class="account-file-input"
-                                        hidden
-                                        accept="image/png, image/jpeg"
-                                    />
-                                <button type="button" class="btn btn-outline-secondary account-image-reset">
-                                    <i class="bx bx-reset d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">Reset</span>
-                                </button>
-                        </div>
-                  <i class="bx bx-upload d-block d-sm-none"></i>
-                <input type="file" class="form-control-file" hidden id="image" name="image">
+             <div class="form-group">
+                <label for="image">Attach Image:</label>
+                <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div> <!-- .card-body -->
         </div>

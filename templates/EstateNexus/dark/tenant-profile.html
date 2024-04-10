@@ -52,13 +52,24 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="avatar avatar-sm mt-2">
-                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                <img src="{{user.avatar.url}}" alt="..." class="avatar-img rounded-circle">
               </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Settings</a>
-              <a class="dropdown-item" href="#">Activities</a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                {% if user.role == 'owner' %}
+                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'manager' %}
+                    <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'tenant' %}
+                    <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                {% endif %}
+                <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                {% else %}
+                <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                 {% endif %}
             </div>
           </li>
         </ul>
@@ -274,6 +285,7 @@
                   </div>
                 </div>
                 <div class="col-md-4 col-xl-3 mb-4">
+                  {% if user.tenant %}
                   <div class="card shadow">
                     <div class="card-body">
                       <div class="row align-items-center">
@@ -284,9 +296,8 @@
                         </div>
                         <div class="col pr-0">
                             <div>
-{#                                <button class="intaSendPayButton" data-amount="1" data-currency="KES" data-email="joe@doe.com" data-first_name="JOE" data-last_name="DOE" data-country="KE">Pay Now</button></div>#}
                           <button type="button" class="btn mb-2 btn-outline-secondary" data-toggle="modal" data-target="#varyModal" data-whatever="@mdo">Make Payment</button>
-                        </div>
+                            </div>
                       </div>
                         <div class="modal fade" id="varyModal" tabindex="-1" role="dialog" aria-labelledby="varyModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -319,6 +330,7 @@
                     </div>
                   </div>
                 </div>
+                  {% endif %}
               </div> <!-- end section -->
             </div>
           </div> <!-- .row -->
@@ -547,9 +559,9 @@
                             <div class="col-md-2 text-center">
                                 <img class="img-fluid rounded m-1 review-image" src="{{ review.image.url }}" alt="..." style="width:100%;max-width:300px; cursor: pointer;">
                             </div>
-                            <div id="myModal" class="modal">
+                            <div id="reviewmyModal" class="reviewmodal">
                                 <span class="close">&times;</span>
-                                <img class="modal-content" id="img01">
+                                <img class="reviewmodal-content" id="img01">
                                 <div id="caption"></div>
                                 <div class="download-btn">
                                     <a href="#" id="downloadBtn" class="btn btn-primary" download>Download Image</a>
@@ -584,35 +596,17 @@
             <label  class="form-check-label mt-1" for="collapseAllCheckbox">Collapse all</label>
           </div>
             <h6 class="mt-n4 text-lg-center">Add a Review</h6>
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="review_form" novalidate>
               {% csrf_token %}
               <div class="form-group">
                 <label for="text"></label>
-                <textarea class="form-control bg-light" id="text" name="text" rows="2"></textarea>
+                <textarea class="form-control bg-light" id="text" name="text" rows="2" required></textarea>
               </div>
-              <div class="form-group">
-                   <div class="button-wrapper">
-                                <label for="image">Attach Image:</label>
-                                <label for="id_photo" class="btn btn-primary mt-2  ml-1" tabindex="0">
-                                    <i class="fe fe-paperclip"></i>
-                                </label>
-                                 <input
-                                        type="file"
-                                        id="id_photo"
-                                        name="photo"
-                                        class="account-file-input"
-                                        hidden
-                                        accept="image/png, image/jpeg"
-                                    />
-                                <button type="button" class="btn btn-outline-secondary account-image-reset">
-                                    <i class="bx bx-reset d-block d-sm-none"></i>
-                                    <span class="d-none d-sm-block">Reset</span>
-                                </button>
-                        </div>
-                  <i class="bx bx-upload d-block d-sm-none"></i>
-                <input type="file" class="form-control-file" hidden id="image" name="image">
+             <div class="form-group">
+                <label for="image">Attach Image:</label>
+                <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div> <!-- .card-body -->
         </div>
@@ -638,9 +632,10 @@
                                 </tr>
                             </thead>
                             <tbody style="max-height: 300px; overflow-y: auto; text-align: center;">
+                                {% load payment_filters %}
                                 {% for payment in payments %}
                                 <tr>
-                                    <td><span class="text-muted">{{ payment.mode }}</span></td>
+                                    <td><span class="text-muted">{{ payment|get_payment_mode }}</span></td>
                                     <th scope="row">
                                         <small><strong>{{ payment.amount }}</strong></small><br />
                                         <span class="badge badge-light text-muted mr-2">
@@ -701,10 +696,25 @@
             </div> <!-- .card -->
           </div>
         </div> <!-- end section -->
+        </div>
       </main> <!-- main -->
 
     </div> <!-- .wrapper -->
-    <script src="{% static 'dark/js/review.js' %}"></script>
+        <script>
+           $('#modal-message').on('shown.bs.modal', function (e) {
+            // Scroll to the bottom of the chat messages container
+            var chatMessagesContainer = document.getElementById('chat-messages');
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+            // Send a request to mark all messages as read
+            $.post('/mark_all_messages_as_read/', function(data) {
+                if (data.success) {
+                    console.log('All messages marked as read');
+                } else {
+                    console.log('Failed to mark messages as read');
+                }
+            });
+        });
+        </script>
         <script>
         // setup chat socket
         const chatSocket = new WebSocket(
@@ -732,25 +742,39 @@
 
         // sending the text message to server
         document.querySelector('#send-button').onclick = function(e) {
-            const messageInputDom = document.querySelector('#id_content');
-            const message = messageInputDom.value.trim();
-            if (message) {
-                chatSocket.send(JSON.stringify({
-                    'message': message,
-                    'sender': '{{ user.email }}',
-                    'receiver': '{{ receiver.email }}'  // Replace with the actual receiver's email
-                }));
-                messageInputDom.value = '';
-            }
-        };
-
+        const messageInputDom = document.querySelector('#id_content');
+        const message = messageInputDom.value.trim();
+        if (message) {
+            let receiverAvatarUrl = '';
+            let senderAvatarUrl = '';
+            let receiverEmail = '';
+            {% if user.role == 'tenant' %}
+                receiverAvatarUrl = '{{ property_occupied.manager.avatar.url }}';
+                receiverEmail = '{{ property_occupied.manager.user.email }}';
+                senderAvatarUrl = '{{ user.avatar.url }}'; // Sender's avatar is the tenant's avatar
+            {% elif user.role == 'manager' %}
+                receiverAvatarUrl = '{{ tenant.avatar.url }}'; // Receiver's avatar is the tenant's avatar
+                receiverEmail = '{{ tenant.user.email }}'; // Receiver is the tenant
+                senderAvatarUrl = '{{ user.avatar.url }}'; // Sender's avatar is the manager's avatar
+            {% endif %}
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'sender': '{{ request.user.email }}', // Sender is the logged-in user
+                'receiver': receiverEmail,
+                'senderAvatarUrl': senderAvatarUrl,
+                'receiverAvatarUrl': receiverAvatarUrl
+            }));
+            messageInputDom.value = '';
+        }
+    };
+    //live chat simulation
     function setMessage(message, sender, receiver) {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message';
 
         const isSender = sender === '{{ user.email }}';
         const name = isSender ? 'You' : '{{ user.first_name }} {{ user.last_name }}';
-        const avatarUrl = isSender ? '{{ user.avatar.url }}' : '{{ message.property.photo.url }}';
+        const avatarUrl = isSender ? '{{ user.avatar.url }}' : '{{ user.avatar.url }}';
         const alignmentClass = isSender ? 'justify-content-end' : 'justify-content-start';
         const bgColor = isSender ? '#DCF8C6' : '#EAEAEA';
         const textColor = isSender ? 'black' : 'black';
@@ -777,18 +801,18 @@
     nameAndTimeDiv.appendChild(nameTag);
     nameAndTimeDiv.appendChild(timeTag);
 
-        const messageContentDiv = document.createElement('div');
-        messageContentDiv.className = 'd-flex flex-row align-items-center';
+    const messageContentDiv = document.createElement('div');
+    messageContentDiv.className = 'd-flex flex-row align-items-center';
 
-        const messageContent = document.createElement('p');
-        messageContent.className = 'small p-2 mb-3 rounded-3 card';
+    const messageContent = document.createElement('p');
+    messageContent.className = 'small p-2 mb-3 rounded-3 card';
     messageContent.textContent = message;
     messageContent.style.backgroundColor = bgColor;
     messageContent.style.color = textColor;
     messageContent.style.maxWidth = '75%'; // Adjust as needed
 
-        const avatarImg = document.createElement('img');
-        avatarImg.src = avatarUrl;
+    const avatarImg = document.createElement('img');
+    avatarImg.src = avatarUrl;
     avatarImg.alt = 'Avatar';
     avatarImg.style.borderRadius = '50%';
     avatarImg.style.height = '3em';
@@ -812,16 +836,17 @@
     }
 
 
-                $('#modal-message').on('show.bs.modal', function (e) {
-            $.post('/mark_all_messages_as_read/', function(data) {
-                if (data.success) {
-                    console.log('All messages marked as read');
-                } else {
-                    console.log('Failed to mark messages as read');
-                }
-            });
+        $('#modal-message').on('show.bs.modal', function (e) {
+    $.post('/mark_all_messages_as_read/', function(data) {
+        if (data.success) {
+            console.log('All messages marked as read');
+        } else {
+            console.log('Failed to mark messages as read');
+        }
         });
+    });
     </script>
+    <script src="{% static 'dark/js/review.js' %}"></script>
     <script>
 // Initialize InstaSend SDK
     new window.IntaSend({

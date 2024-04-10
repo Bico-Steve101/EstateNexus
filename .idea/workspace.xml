@@ -5,30 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d2276a77-c6a3-49ab-be6a-b755e6ae24b1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EstateNexusM/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/EstateNexusM/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/credentials.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/credentials.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0002_message.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0003_rename_property_message_related_property_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0004_rename_related_property_message_property_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0005_message_is_property_message.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0006_remove_message_receiver_remove_message_sender_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0007_remove_message_is_property_message_message_sender.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0008_message_is_property_message_alter_message_property_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0009_remove_message_sender_alter_message_property_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0010_rename_message_chatmessage_content_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0011_rename_is_property_message_chatmessage_is_delivered_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0012_manager_tenant_alter_tenant_manager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/migrations/0013_rename_is_delivered_chatmessage_is_received.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/tasks.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/tasks.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/User/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/celerybeat-schedule.dat" beforeDir="false" afterPath="$PROJECT_DIR$/celerybeat-schedule.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/celery_errors.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/celery_errors.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/dark/css/review.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/dark/css/review.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/dark/js/dashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/dark/js/dashboard.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/dark/js/download.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/dark/js/download.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/dark/js/review.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/dark/js/review.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add-manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add-manager.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add-property.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add-property.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add-tenant.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add-tenant.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/add_testimonial.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/add_testimonial.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/contacts-new.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/contacts-new.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/dashboard-sales.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/dashboard-sales.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/getting-started.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/getting-started.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/managers-profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/managers-profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/managers.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/managers.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/mpesa_payment.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/mpesa_payment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/page-invoice.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/page-invoice.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/page-timeline.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/page-timeline.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/payments.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/payments.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/profile-notification.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/profile-notification.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/properties.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/properties.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/property-contact.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/property-contact.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/property-details.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/property-details.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/EstateNexus/dark/tenant-profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/EstateNexus/dark/tenant-profile.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,6 +46,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -57,7 +68,7 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;changes&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/steve/PycharmProjects/EstateNexusM/media/avatars&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/steve/PycharmProjects/EstateNexusM/media/media&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -68,12 +79,14 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\media\media" />
+      <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\media\media\tenants" />
       <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\media\avatars" />
       <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\static\dark\assets\avatars" />
       <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\templates\EstateNexus\dark\assets\avatars" />
-      <recent name="C:\Users\steve\PycharmProjects\EstateNexusM" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\static\img" />
       <recent name="C:\Users\steve\PycharmProjects\EstateNexusM\media\media" />
     </key>
   </component>
@@ -166,12 +179,30 @@
       <workItem from="1712174544223" duration="44423000" />
       <workItem from="1712297900120" duration="15988000" />
       <workItem from="1712413346967" duration="591000" />
-      <workItem from="1712493986167" duration="343000" />
+      <workItem from="1712493986167" duration="95977000" />
+      <workItem from="1712655500073" duration="605000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/User/serializers.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/EstateNexusM$Test__User_tests_MPesaCallbackTestCase.coverage" NAME="Test: User.tests.MPesaCallbackTestCase Coverage Results" MODIFIED="1712213802743" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />

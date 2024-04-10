@@ -57,13 +57,24 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="avatar avatar-sm mt-2">
-                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                <img src="{{user.avatar.url}}" alt="..." class="avatar-img rounded-circle">
               </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Settings</a>
-              <a class="dropdown-item" href="#">Activities</a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                {% if user.role == 'owner' %}
+                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'manager' %}
+                    <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'tenant' %}
+                    <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                {% endif %}
+                <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                {% else %}
+                <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                 {% endif %}
             </div>
           </li>
         </ul>
@@ -153,7 +164,7 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <!-- <h2>Section title</h2> -->
-              <h2 class="h5 page-title mt-2">Sandra's Properties</h2>
+              <h2 class="h5 page-title mt-2">{{ user.username }} Properties</h2>
               <p class="text-muted">This page is meant to make it easy to display both the rented properties and properties on sale.
                   Feel free to make necessary changes to the properties available.
               </p>
@@ -253,12 +264,12 @@
                                         <img src="{{ property.photo.url }}" class="card-img-top rounded-0" alt="{{ property.name }}" style="height: 18em!important;">
                                     </a>
                                     <div class="text-right mt-n4 top-1 p-2 end-0 mb-n3 me-5">
-                                        <a href="">
+                                        <a href="{% url 'User:edit_property' property.id %}">
                                             <span class="circle circle-sm bg-primary">
                                                 <i class="fe fe-16 fe-settings text-white mb-0"></i>
                                             </span>
                                         </a>
-                                        <a href="">
+                                        <a href="{% url 'User:delete_property' property.id %}">
                                             <span class="circle circle-sm bg-primary">
                                                 <i class="fe fe-16 fe-trash-2 text-white mb-0"></i>
                                             </span>
@@ -268,7 +279,7 @@
                                 <div class="card-body pt-3 p-4">
                                     <h6 class="fw-semibold fs-4">{{ property.name }}</h6>
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <h6 class="fw-semibold fs-4 mb-0">50 <span>Tenants</span></h6>
+                                        <h6 class="fw-semibold fs-4 mb-0">{{ property.tenants.count }}<span>Tenants</span></h6>
                                     </div>
                                 </div>
                             </div>
@@ -334,12 +345,12 @@
                                             <img src="{{ property.photo.url }}" class="card-img-top rounded-0" alt="{{ property.name }}" style="height: 18em!important;">
                                         </a>
                                         <div class="text-right mt-n4 top-1 p-2 end-0 mb-n3 me-5">
-                                            <a href="">
+                                            <a href="{% url 'User:edit_property' property.id %}">
                                                 <span class="circle circle-sm bg-primary">
                                                     <i class="fe fe-16 fe-settings text-white mb-0"></i>
                                                 </span>
                                             </a>
-                                            <a href="">
+                                            <a  href="{% url 'User:delete_property' property.id %}">
                                                 <span class="circle circle-sm bg-primary">
                                                     <i class="fe fe-16 fe-trash-2 text-white mb-0"></i>
                                                 </span>
@@ -349,7 +360,7 @@
                                     <div class="card-body pt-3 p-4">
                                         <h6 class="fw-semibold fs-4">{{ property.name }}</h6>
                                         <div class="d-flex align-items-center justify-content-between">
-                                            <h6 class="fw-semibold fs-4 mb-0">{{ property.tenants.count }}<span>Tenants</span></h6>
+{#                                            <h6 class="fw-semibold fs-4 mb-0">{{ property.tenants.count }}<span>Tenants</span></h6>#}
                                         </div>
                                     </div>
                                 </div>

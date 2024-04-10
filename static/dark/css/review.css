@@ -1,5 +1,5 @@
 /* Modal styles */
-.modal {
+.reviewmodal {
     display: none;
     position: fixed;
     z-index: 9999;
@@ -18,14 +18,14 @@
     transition: 0.10s ease-in-out;
 
     }
-.modal-content {
+.reviewmodal-content {
     margin: auto;
     display: block;
     width: 80%;
     max-width: 800px;
 }
 
-.modal-content {
+.reviewmodal-content {
     animation-name: zoom;
     animation-duration: 0.6s;
 }

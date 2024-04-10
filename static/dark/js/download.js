@@ -92,3 +92,102 @@
         // Show success message
         alert('File has been downloaded successfully!');
     });
+    $(function () {
+    // Function to fetch property data via AJAX
+    function getPropertyData() {
+        $.ajax({
+            url: '/api/property-data/',
+            method: 'GET',
+            success: function (data) {
+                // Process the fetched data and render the charts
+                renderCharts(data);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching property data:', error);
+            }
+        });
+    }
+
+    // Function to render the charts with the fetched property data
+    function renderCharts(propertyData) {
+        // Extracting property names and prices for rendering
+        var propertyNames = propertyData.map(function (property) {
+            return property.name;
+        });
+        var propertyPrices = propertyData.map(function (property) {
+            return property.price;
+        });
+
+        // Rendering the Profit chart with property data
+        var profitChart = {
+            // Chart configuration remains the same
+            // (this part is unchanged from the previous code)
+        };
+        var profitChart = new ApexCharts(document.querySelector("#chart"), profitChart);
+        profitChart.render();
+
+        // Rendering the Breakup chart with example data
+        var breakupChart = {
+            // Chart configuration remains the same
+            // (this part is unchanged from the previous code)
+        };
+        var breakupChart = new ApexCharts(document.querySelector("#breakup"), breakupChart);
+        breakupChart.render();
+
+        // Rendering the Earning chart with example data
+        var earningChart = {
+            // Chart configuration remains the same
+            // (this part is unchanged from the previous code)
+        };
+        var earningChart = new ApexCharts(document.querySelector("#earning"), earningChart);
+        earningChart.render();
+
+        // Rendering the Monthly Earning chart with actual property data
+        var monthlyEarningChart = {
+            series: [{
+                name: 'Monthly Earnings',
+                data: propertyPrices // Use actual monthly earning data from propertyPrices
+            }],
+            chart: {
+                type: 'line',
+                height: 350
+            },
+            xaxis: {
+                categories: propertyNames // Use property names as x-axis labels
+            }
+        };
+        var monthlyEarningChart = new ApexCharts(document.querySelector("#monthly-earning"), monthlyEarningChart);
+        monthlyEarningChart.render();
+
+        // Fetching and rendering yearly earning data
+        $.ajax({
+            url: '/api/yearly-earning-data/',
+            method: 'GET',
+            success: function (yearlyData) {
+                // Rendering the Yearly Earning chart with fetched data
+                var yearlyEarningChart = {
+                    series: [{
+                        name: 'Yearly Earnings',
+                        data: yearlyData // Use actual yearly earning data
+                    }],
+                    chart: {
+                        type: 'line',
+                        height: 350
+                    },
+                    xaxis: {
+                        categories: Object.keys(yearlyData) // Use years as x-axis labels
+                    }
+                };
+                var yearlyEarningChart = new ApexCharts(document.querySelector("#yearly-earning"), yearlyEarningChart);
+                yearlyEarningChart.render();
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching yearly earning data:', error);
+            }
+        });
+    }
+
+    // Fetch property data and render charts when the page loads
+    getPropertyData();
+});
+

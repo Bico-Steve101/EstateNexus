@@ -1,7 +1,9 @@
+import base64
 import json
 import logging
 import random
 import string
+import time
 from datetime import timedelta
 
 import requests
@@ -9,13 +11,14 @@ from io import BytesIO
 from itertools import chain
 import pandas as pd
 from celery.utils.log import get_task_logger
-from django.conf import settings
+from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.hashers import check_password
+from django.views import View
 from pyfcm import FCMNotification
 from django.db import IntegrityError
 from django.db.models import Count, Sum, Q
@@ -306,6 +309,27 @@ def dashboard(request):
     # Combine all recent payments into one queryset
     recent_payments = list(recent_mpesa_payments) + list(recent_credit_card_payments) + list(recent_paypal_payments)
 
+    # Calculate total monthly and yearly earnings
+    current_year = datetime.now().year
+    current_month = datetime.now().month
+
+    tenants = Tenant.objects.filter(property__user=request.user)
+
+    mpesa_payments = MPesaPayment.objects.filter(tenant__in=tenants)
+    credit_card_payments = CreditCardPayment.objects.filter(tenant__in=tenants)
+    paypal_payments = PaypalPayment.objects.filter(tenant__in=tenants)
+
+    # Calculate the total monthly payments made by all tenants for the property
+    total_monthly_payments = (
+            mpesa_payments.aggregate(Sum('amount'))['amount__sum'] or 0 +
+            credit_card_payments.aggregate(Sum('amount'))['amount__sum'] or 0 +
+            paypal_payments.aggregate(Sum('amount'))['amount__sum'] or 0
+    )
+    total_yearly_earnings = (
+            MPesaPayment.objects.filter(tenant__property__user=request.user, payment_date__year=current_year)
+            .aggregate(total_yearly_earnings=Sum('amount'))['total_yearly_earnings'] or 0
+    )
+
     recent_reviews = Review.objects.filter(property__user=request.user, created_at__gte=three_days_ago)
 
     context = {
@@ -315,6 +339,8 @@ def dashboard(request):
         'tenant_requests': tenant_requests,
         'recent_payments': recent_payments,
         'recent_reviews': recent_reviews,
+        'total_monthly_earnings': total_monthly_payments,
+        'total_yearly_earnings': total_yearly_earnings,
     }
     return render(request, 'EstateNexus/dark/index.html', context)
 
@@ -730,7 +756,7 @@ def tenant_profile(request, tenant_id):
                 review.user = request.user
                 review.property = property_occupied
                 review.save()
-                return redirect('User:tenant_profile', tenant_id=tenant_id)
+                return redirect('User:tenant-profile', tenant_id=tenant_id)
         else:
             form = ReviewForm()
 
@@ -771,16 +797,43 @@ def send_push_notification(to_user, message):
     return result
 
 
-def getAccessToken(request):
-    consumer_key = 'sGxb5imn3ePLbcNKeaUiVKpIxNtWQkO8DDH6qEJJpCZGFwGy'
-    consumer_secret = 'S55sSNaKNWUS1TsG7DTWxZdgmlULDhAqRSGGCfzp0YGNaoJILwKfGwjRAJLG39ki'
-    api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+# def getAccessToken(request):
+#     consumer_key = 'sGxb5imn3ePLbcNKeaUiVKpIxNtWQkO8DDH6qEJJpCZGFwGy'
+#     consumer_secret = 'S55sSNaKNWUS1TsG7DTWxZdgmlULDhAqRSGGCfzp0YGNaoJILwKfGwjRAJLG39ki'
+#     api_URL = 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials'
+#
+#     r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
+#     mpesa_access_token = json.loads(r.text)
+#     validated_mpesa_access_token = mpesa_access_token['access_token']
+#
+#     return HttpResponse(validated_mpesa_access_token)
 
-    r = requests.get(api_URL, auth=HTTPBasicAuth(consumer_key, consumer_secret))
-    mpesa_access_token = json.loads(r.text)
-    validated_mpesa_access_token = mpesa_access_token['access_token']
 
-    return HttpResponse(validated_mpesa_access_token)
+def getAccessToken():
+    consumer_key = "sGxb5imn3ePLbcNKeaUiVKpIxNtWQkO8DDH6qEJJpCZGFwGy"
+    consumer_secret = "S55sSNaKNWUS1TsG7DTWxZdgmlULDhAqRSGGCfzp0YGNaoJILwKfGwjRAJLG39ki"
+
+    url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+
+    try:
+
+        encoded_credentials = base64.b64encode(f"{consumer_key}:{consumer_secret}".encode()).decode()
+
+        headers = {
+            "Authorization": f"Basic {encoded_credentials}",
+            "Content-Type": "application/json"
+        }
+
+        # Send the request and parse the response
+        response = requests.get(url, headers=headers).json()
+
+        # Check for errors and return the access token
+        if "access_token" in response:
+            return response["access_token"]
+        else:
+            raise Exception("Failed to get access token: " + response["error_description"])
+    except Exception as e:
+        raise Exception("Failed to get access token: " + str(e))
 
 
 logger = logging.getLogger(__name__)
@@ -806,7 +859,7 @@ def mpesa_payment(request):
             phone_number = form.cleaned_data['phone_number']
             amount = int(payment.amount)
             transaction_desc = 'Payment for EstateNexus'
-            callback_url = 'https://38be-41-80-116-140.ngrok-free.app/mpesa/callback/'
+            callback_url = 'https://8191-41-80-114-239.ngrok-free.app/mpesa/callback/'
             if not access_token:
                 messages.error(request, 'Failed to obtain M-Pesa access token.')
                 return render(request, 'EstateNexus/dark/mpesa_payment.html', {'form': form, 'tenant': tenant})
@@ -832,8 +885,10 @@ def mpesa_payment(request):
             response_data = response.json()
             if response_data.get('ResponseCode') == '0':
                 # return HttpResponse("STK push initiated successfully. Redirecting to success page...")
-                print("API request successful:", response.text)
+                messages.success(request, 'STK sent complete the payment.')
+                # print("API request successful:", response.text)
             else:
+                messages.success(request, 'STK sent complete the payment.')
                 error_message = response_data.get('errorMessage', 'Failed to initiate STK push.')
                 messages.error(request, error_message)
                 return redirect('User:mpesa_payment')
@@ -848,21 +903,43 @@ def mpesa_payment(request):
     return render(request, 'EstateNexus/dark/mpesa_payment.html', context)
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-
-@csrf_exempt
-def register_urls(request):
-    access_token = MpesaAccessToken.validated_mpesa_access_token
-    api_url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl"
-    headers = {"Authorization": "Bearer %s" % access_token}
-    options = {"ShortCode": LipanaMpesaPpassword.Test_c2b_shortcode,
-               "ResponseType": "Completed",
-               "ConfirmationURL": "https://79372821.ngrok.io/api/v1/c2b/confirmation",
-               "ValidationURL": "https://79372821.ngrok.io/api/v1/c2b/validation"}
-    response = requests.post(api_url, json=options, headers=headers)
-
-    return HttpResponse(response.text)
+# class STKPushQueryView(View):
+#     def post(self, request, *args, **kwargs):
+#         CheckoutRequestID = kwargs.get('CheckoutRequestID')
+#         access_token = self.getAccessToken()
+#
+#         if not access_token:
+#             return JsonResponse({'success': False, 'message': 'Failed to obtain M-Pesa access token.'})
+#
+#         api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query"
+#         shortCode = "174379"
+#         passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+#         timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+#         stk_password = base64.b64encode((shortCode + passkey + timestamp).encode('utf-8')).decode('utf-8')
+#
+#         request_data = {
+#             "BusinessShortCode": shortCode,
+#             "Password": stk_password,
+#             "Timestamp": timestamp,
+#             "CheckoutRequestID": CheckoutRequestID
+#         }
+#
+#         headers = {'Authorization': 'Bearer ' + access_token,
+#                    'Content-Type': 'application/json'}
+#
+#         try:
+#             mpesa_response = requests.post(api_url, json=request_data, headers=headers)
+#             response_data = mpesa_response.json()
+#
+#             if response_data.get('ResponseCode') == '0':
+#                 return JsonResponse({'success': True, 'message': 'Transaction successful'})
+#             else:
+#                 error_message = response_data.get('errorMessage', 'Unknown error')
+#                 return JsonResponse({'success': False, 'message': 'Transaction failed: ' + error_message})
+#
+#         except Exception as e:
+#             logging.error('Error querying STK push status:', exc_info=True)
+#             return JsonResponse({'success': False, 'message': 'Failed to query STK push status.'})
 
 
 @csrf_exempt
@@ -925,54 +1002,42 @@ def mpesa_callback(request):
         }
         return JsonResponse(error_response_data, status=400)
 
-@csrf_exempt
-def validation(request):
-    context = {
-        "ResultCode": 0,
-        "ResultDesc": "Accepted"
-    }
-    return JsonResponse(dict(context))
 
-
-@csrf_exempt
-def confirmation(request):
-    # Decode the request body and load the JSON data
-    mpesa_body = request.body.decode('utf-8')
-    mpesa_payment = json.loads(mpesa_body)
-
-    # Extract relevant information from the M-Pesa transaction data
-    tenant_id = mpesa_payment.get('AccountReference')
-
-    try:
-        # Retrieve the tenant based on the tenant ID (account reference)
-        tenant = Tenant.objects.get(id=tenant_id)
-
-        # Create the M-Pesa payment associated with the tenant
-        payment = MPesaPayment.objects.create(
-            tenant=tenant,
-            phone_number=mpesa_payment['PhoneNumber'],
-            amount=mpesa_payment['Amount'],
-            reference=mpesa_payment['BillRefNumber'],
-            transaction_type=mpesa_payment['TransactionType'],
-            transaction_id=mpesa_payment['TransID'],
-            # Add other fields as needed
-        )
-
-        # Return success response
-        response_data = {
-            "ResultCode": 0,
-            "ResultDesc": "Accepted"
-        }
-        return JsonResponse(response_data)
-
-    except Tenant.DoesNotExist:
-        # Handle the case where the tenant is not found
-        error_response_data = {
-            "ResultCode": 1,
-            "ResultDesc": "Tenant not found"
-        }
-        return JsonResponse(error_response_data, status=400)
-
+# def query_stk_push_status(checkout_request_id):
+#     access_token = getAccessToken()
+#
+#     if not access_token:
+#         return JsonResponse({'success': False, 'message': 'Failed to obtain M-Pesa access token.'}, status=400)
+#
+#     api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query"
+#     shortCode = "174379"
+#     passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"  # Replace with your M-Pesa passkey
+#     timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+#     stk_password = base64.b64encode((shortCode + passkey + timestamp).encode('utf-8')).decode('utf-8')
+#
+#     request_data = {
+#         "BusinessShortCode": shortCode,
+#         "Password": stk_password,
+#         "Timestamp": timestamp,
+#         "CheckoutRequestID": checkout_request_id
+#     }
+#
+#     headers = {'Authorization': 'Bearer ' + access_token,
+#                'Content-Type': 'application/json'}
+#
+#     try:
+#         mpesa_response = requests.post(api_url, json=request_data, headers=headers)
+#         response_data = mpesa_response.json()
+#
+#         if response_data.get('ResponseCode') == '0':
+#             return JsonResponse({'success': True, 'message': 'Transaction successful'})
+#         else:
+#             error_message = response_data.get('errorMessage', 'Unknown error')
+#             return JsonResponse({'success': False, 'message': 'Transaction failed: ' + error_message}, status=400)
+#
+#     except Exception as e:
+#         logging.error('Error querying STK push status:', exc_info=True)
+#         return JsonResponse({'success': False, 'message': 'Failed to query STK push status.'}, status=400)
 
 @login_required
 def paypal_payment(request):
@@ -1030,9 +1095,9 @@ def credit_card_payment(request):
 
 logger = get_task_logger(__name__)
 
-account_sid = 'AC9e35e109ca7de1d8892cc7e00908c6ea'
-auth_token = 'eeb9e3b2a960093dacdc3330bdb046a4'
-twilio_phone_number = '+12098878105'
+account_sid = 'AC07a99ab29757d9b52dd396795ab8982f'
+auth_token = 'ce6895097c1175fea1b88023d255d95c'
+twilio_phone_number = '+15706522081'
 
 
 @login_required
@@ -1045,7 +1110,6 @@ def send_message(request, property_id):
             tenant = get_object_or_404(Tenant, id=tenant_id)
             message = form.cleaned_data.get('message')
 
-            # Check if the message is empty
             if not message.strip():
                 messages.error(request, 'Message cannot be empty.')
                 return redirect('User:payments', property_id=property_id)
@@ -1274,6 +1338,40 @@ def dashboard_property_detail(request, property_id):
 
     reviews = Review.objects.filter(property=property)
 
+    # Fetch payments made by tenants for the property
+    mpesa_payments = MPesaPayment.objects.filter(tenant__in=tenants)
+    credit_card_payments = CreditCardPayment.objects.filter(tenant__in=tenants)
+    paypal_payments = PaypalPayment.objects.filter(tenant__in=tenants)
+
+    # Calculate the total monthly payments made by all tenants for the property
+    total_monthly_payments = (
+            mpesa_payments.aggregate(Sum('amount'))['amount__sum'] or 0 +
+            credit_card_payments.aggregate(Sum('amount'))['amount__sum'] or 0 +
+            paypal_payments.aggregate(Sum('amount'))['amount__sum'] or 0
+    )
+    current_date = datetime.now()
+    previous_month_date = current_date - timedelta(days=current_date.day)
+
+    current_date = datetime.now()
+    previous_month_date = current_date - timedelta(days=current_date.day)
+
+    mpesa_previous_month_payments = \
+        MPesaPayment.objects.filter(tenant__in=tenants, payment_date__year=previous_month_date.year,
+                                    payment_date__month=previous_month_date.month).aggregate(Sum('amount'))[
+            'amount__sum'] or 0
+    credit_card_previous_month_payments = \
+        CreditCardPayment.objects.filter(tenant__in=tenants, payment_date__year=previous_month_date.year,
+                                         payment_date__month=previous_month_date.month).aggregate(Sum('amount'))[
+            'amount__sum'] or 0
+    paypal_previous_month_payments = \
+        PaypalPayment.objects.filter(tenant__in=tenants, payment_date__year=previous_month_date.year,
+                                     payment_date__month=previous_month_date.month).aggregate(Sum('amount'))[
+            'amount__sum'] or 0
+    previous_month_total_payments = mpesa_previous_month_payments + credit_card_previous_month_payments + paypal_previous_month_payments
+
+    # Calculate the difference in numbers (digit difference)
+    digit_difference = total_monthly_payments - previous_month_total_payments
+
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
@@ -1295,6 +1393,8 @@ def dashboard_property_detail(request, property_id):
         'manager': manager,
         'reviews': reviews,
         'form': form,
+        'total_monthly_payments': total_monthly_payments,
+        'digit_difference': digit_difference,
     }
     return render(request, 'EstateNexus/dark/property-details.html', context)
 
@@ -1310,6 +1410,33 @@ def add_property(request):
     else:
         form = PropertyForm()
     return render(request, 'EstateNexus/dark/add-property.html', {'form': form})
+
+
+def edit_property(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    if request.method == 'POST':
+        form = PropertyForm(request.POST, instance=property)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Property updated successfully')
+            return redirect('property_detail', property_id=property.id)
+    else:
+        form = PropertyForm(instance=property)
+
+    return render(request, 'EstateNexus/dark/edit-property.html', {'form': form})
+
+
+def delete_property(request, property_id):
+    property = get_object_or_404(Property, id=property_id)
+    if request.user != property.user:
+        messages.error(request, 'You are not authorized to delete this property')
+        return redirect('property_detail', property_id=property.id)
+    if request.method == 'POST':
+        property.delete()
+        messages.success(request, 'Property deleted successfully')
+        return redirect('/')
+
+    return render(request, 'EstateNexus/dark/delete-property.html', {'property': property})
 
 
 def getting_started(request):
@@ -1335,6 +1462,7 @@ def download(request):
     response['Content-Disposition'] = 'attachment; filename=Payments.xlsx'
 
     return response
+
 
 # @login_required
 # def send_message_to_tenants(request):
@@ -1374,3 +1502,12 @@ def download(request):
 #     else:
 #         form = SendMessageForm()  # Create an empty form
 #         return render(request, 'send_message.html', {'form': form})
+
+
+def get_property_data(request):
+    properties = Property.objects.all()
+    property_data = [{
+        'name': property.name,
+        'price': property.price,
+    } for property in properties]
+    return JsonResponse(property_data, safe=False)
