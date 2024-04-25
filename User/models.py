@@ -243,7 +243,7 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_date = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
-    payment_id = models.CharField(max_length=5, unique=True, editable=False)
+    payment_id = models.CharField(max_length=100, unique=True, editable=False)
 
     class Meta:
         abstract = True
@@ -264,6 +264,14 @@ STATUS = ((1, "Pending"), (0, "Complete"))
 
 class MPesaPayment(Payment):
     phone_number = models.CharField(max_length=15)
+    status = models.IntegerField(choices=STATUS, default=1)
+    checkout_request_id = models.CharField(max_length=100, null=True, blank=True)
+
+
+class MpesaResponseBody(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    body = models.JSONField()
 
 
 class CreditCardPayment(Payment):
@@ -318,20 +326,6 @@ class Message(models.Model):
         return f'Message from {self.tenant.user.username} to Property {self.property.id}'
 
 
-class ChatMessage(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_messages')
-    content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    is_received = models.BooleanField(default=False)
-    is_read = models.BooleanField(default=False)
-    file = models.FileField(upload_to='messages/files', null=True, blank=True)
-
-    def __str__(self):
-        return self.content
-
-
 class ScheduledMessage(models.Model):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     message = models.TextField()
@@ -348,6 +342,20 @@ class ScheduledMessage(models.Model):
         if self.send_at and self.send_at <= timezone.now():
             self.is_sent = True
         super().save(*args, **kwargs)
+
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='property_messages')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_received = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False)
+    file = models.FileField(upload_to='messages/files', null=True, blank=True)
+
+    def __str__(self):
+        return self.content
 
 
 class Testimonial(models.Model):

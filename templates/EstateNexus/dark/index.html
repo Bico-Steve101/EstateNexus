@@ -55,13 +55,24 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <span class="avatar avatar-sm mt-2">
-                <img src="{% static 'dark/assets/avatars/face-1.jpg' %}" alt="..." class="avatar-img rounded-circle">
+                <img src="{{user.avatar.url}}" alt="..." class="avatar-img rounded-circle">
               </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Profile</a>
-              <a class="dropdown-item" href="#">Settings</a>
-              <a class="dropdown-item" href="#">Activities</a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                {% if user.role == 'owner' %}
+                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'manager' %}
+                    <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'tenant' %}
+                    <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                {% endif %}
+                <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                {% else %}
+                <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                 {% endif %}
             </div>
           </li>
         </ul>
@@ -179,10 +190,10 @@
                         </div>
                         <div>
                           <select class="form-select btn btn-sm dropdown-toggle more-vertical dropdown-menu-right">
-                            <option value="1">March 2023</option>
-                            <option value="2">April 2023</option>
-                            <option value="3">May 2023</option>
-                            <option value="4">June 2023</option>
+                            <option value="1">March 2024</option>
+                            <option value="2">April 2024</option>
+                            <option value="3">May 2024</option>
+                            <option value="4">June 2024</option>
                           </select>
                         </div>
                       </div>
@@ -200,7 +211,7 @@
                           <h5 class="card-title mb-9 fw-semibold">Yearly Breakup</h5>
                           <div class="row align-items-center">
                             <div class="col-8">
-                              <h4 class="fw-semibold mb-3">$36,358</h4>
+                              <h4 class="fw-semibold mb-3">{{ total_yearly_earnings }}Ksh</h4>
                               <div class="d-flex align-items-center mb-3">
                                 <span
                                   class="me-1 rounded-circle bg-light-success round-20 d-flex align-items-center justify-content-center">
@@ -236,7 +247,7 @@
                           <div class="row alig n-items-start">
                             <div class="col-8">
                               <h5 class="card-title mb-9 fw-semibold"> Monthly Earnings </h5>
-                              <h4 class="fw-semibold mb-3">$6,820</h4>
+                              <h4 class="fw-semibold mb-3">{{ total_monthly_earnings }}Ksh</h4>
                               <div class="d-flex align-items-center pb-1">
                                 <span
                                   class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
@@ -345,95 +356,78 @@
                 </div> <!-- .col-md -->
               </div> <!-- .row -->
               <div class="row">
-                <!-- Recent Activity -->
+                  <!-- Recent Activity -->
                 <div class="col-md-12 col-lg-4 mb-4">
-                  <div class="card timeline shadow">
-                    <div class="card-header">
-                      <strong class="card-title">Recent Activity</strong>
-                      <a class="float-right small text-muted" href="#!">View all</a>
-                    </div>
-                    <div class="card-body" data-simplebar style="height:355px; overflow-y: auto; overflow-x: hidden;">
-                      <h6 class="text-uppercase text-muted mb-4">Today</h6>
-                      <div class="pb-3 timeline-item item-primary">
-                        <div class="pl-5">
-                          <div class="mb-1"><strong>@Brown Asher</strong><span class="text-muted small mx-2">Just create new layout Index, form, table</span><strong>Tiny Admin</strong></div>
-                          <p class="small text-muted">Creative Design <span class="badge badge-light">1h ago</span>
-                          </p>
+                    <div class="card timeline shadow">
+                        <div class="card-header">
+                            <strong class="card-title">Recent Activity</strong>
+                            <a class="float-right small text-muted" href="#!">View all</a>
                         </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-warning">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Hester Nissim</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                          <div class="row mb-3">
-                            <div class="col"><img src="{% static 'dark/assets/products/p1.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p2.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p3.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p4.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                          </div>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-success">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Kelley Sonya</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                          <div class="card d-inline-flex mb-2">
-                            <div class="card-body bg-light py-2 px-3 small rounded"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                          </div>
-                          <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <h6 class="text-uppercase text-muted mb-4">Yesterday</h6>
-                      <div class="pb-3 timeline-item item-warning">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Fletcher Everett</strong><span class="text-muted small mx-2">created new group for</span><strong>Tiny Admin</strong></div>
-                          <ul class="avatars-list mb-3">
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-1.jpg' %}">
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-4.jpg' %}">
-                              </a>
-                            </li>
-                            <li>
-                              <a href="#!" class="avatar avatar-sm">
-                                <img alt="..." class="avatar-img rounded-circle" src="{% static 'dark/assets/avatars/face-3.jpg' %}">
-                              </a>
-                            </li>
-                          </ul>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-success">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Bertha Ball</strong><span class="text-muted small mx-2">has commented on</span><strong>Advanced table</strong></div>
-                          <div class="card d-inline-flex mb-2">
-                            <div class="card-body bg-light py-2 px-3"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dignissim nulla eu quam cursus placerat. Vivamus non odio ullamcorper, lacinia ante nec, blandit leo. </div>
-                          </div>
-                          <p class="small text-muted">Back-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div class="pb-3 timeline-item item-danger">
-                        <div class="pl-5">
-                          <div class="mb-3"><strong>@Lillith Joseph</strong><span class="text-muted small mx-2">has upload new files to</span><strong>Tiny Admin</strong></div>
-                          <div class="row mb-3">
-                            <div class="col"><img src="{% static 'dark/assets/products/p4.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p1.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                            <div class="col"><img src="{% static 'dark/assets/products/p2.jpg' %}" alt="..." class="img-fluid rounded"></div>
-                          </div>
-                          <p class="small text-muted">Front-End Development <span class="badge badge-light">1h ago</span>
-                          </p>
-                        </div>
-                      </div>
-                    </div> <!-- / .card-body -->
-                  </div> <!-- / .card -->
-                </div> <!-- / .col-md-6 -->
+                        <div class="card-body" data-simplebar style="height:355px; overflow-y: auto; overflow-x: hidden;">
+                            <h6 class="text-uppercase text-muted mb-4">Recent Reviews</h6>
+                            {% for review in recent_reviews %}
+                            <div class="pb-3 timeline-item item-primary">
+                                <div class="pl-5">
+                                    <div class="mb-1"><strong></strong>{{ review.user.name }}<span class="text-muted small mx-2"></span><strong>{{ review.property }}</strong></div>
+                                    <div class="card-body bg-light py-2 px-3">{{ review.text }}
+                                    {% if review.image %}
+                                        <hr class="my-4">
+                                        <div class="row mb-3">
+                                        <div class="col" ><img src="{{ review.image.url }}" alt="Review Image" class="img-fluid rounded" style="height: 5em; width: 5em;"></div>
+                                        </div>
+                                    {% endif %}
+                                    </div>
+                                </div>
+                                <p class="small text-muted ml-5 mt-1">{{ review.user }} <span class="badge badge-light">{{ review.created_at|timesince }} ago</span>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Payments</h6>
+                            {% for payment in recent_payments %}
+                            <div class="pb-3 timeline-item item-warning">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Payment of {{ payment.amount }}</strong><span class="text-muted small mx-2">made by {{ payment.tenant }}</span></div>
+                                    <p class="small text-muted">{{ payment.payment_date|timesince }} ago
+                                    </p>
+                                    {% if payment.mpesapayment %}
+                                    <p class="small text-muted">Payment Method: MPesa</p>
+                                    <p class="small text-muted">Phone Number: {{ payment.mpesapayment.phone_number }}</p>
+                                    {% elif payment.creditcardpayment %}
+                                    <p class="small text-muted">Payment Method: Credit Card</p>
+                                    <p class="small text-muted">Card Number: {{ payment.creditcardpayment.card_number }}</p>
+                                    {% elif payment.paypalpayment %}
+                                    <p class="small text-muted">Payment Method: Paypal</p>
+                                    <p class="small text-muted">Email: {{ payment.paypalpayment.email }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Manager Requests</h6>
+                            {% for manager_request in recent_manager_requests %}
+                            <div class="pb-3 timeline-item item-success">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Manager Request</strong><span class="text-muted small mx-2">{{ manager_request.description }}</span></div>
+                                    <p class="small text-muted">{{ manager_request.joined|timesince }} ago
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <h6 class="text-uppercase text-muted mb-4">Recent Tenant Requests</h6>
+                            {% for tenant_request in recent_tenant_requests %}
+                            <div class="pb-3 timeline-item item-danger">
+                                <div class="pl-5">
+                                    <div class="mb-3"><strong>Tenant Request</strong><span class="text-muted small mx-2">{{ tenant_request.description }}</span></div>
+                                    <p class="small text-muted">{{ tenant_request.joined|timesince }} ago
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div> <!-- / .card-body -->
+                    </div> <!-- / .card -->
+                </div>
+                  <!-- Recent Activity Ende -->
                 <!-- Striped rows -->
                 <div class="col-md-12 col-lg-8">
                   <div class="card shadow" style="height: 29em!important; overflow: hidden!important;">
@@ -507,30 +501,30 @@
                       </div>
                     </div>
                   </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-download fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Widgets are updated successfull</strong></small>
-                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>
-                        <small class="badge badge-pill badge-light text-muted">2m ago</small>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="list-group-item bg-transparent">
-                    <div class="row align-items-center">
-                      <div class="col-auto">
-                        <span class="fe fe-inbox fe-24"></span>
-                      </div>
-                      <div class="col">
-                        <small><strong>Notifications have been sent</strong></small>
-                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>
-                        <small class="badge badge-pill badge-light text-muted">30m ago</small>
-                      </div>
-                    </div> <!-- / .row -->
-                  </div>
+{#                  <div class="list-group-item bg-transparent">#}
+{#                    <div class="row align-items-center">#}
+{#                      <div class="col-auto">#}
+{#                        <span class="fe fe-download fe-24"></span>#}
+{#                      </div>#}
+{#                      <div class="col">#}
+{#                        <small><strong>Widgets are updated successfull</strong></small>#}
+{#                        <div class="my-0 text-muted small">Just create new layout Index, form, table</div>#}
+{#                        <small class="badge badge-pill badge-light text-muted">2m ago</small>#}
+{#                      </div>#}
+{#                    </div>#}
+{#                  </div>#}
+{#                  <div class="list-group-item bg-transparent">#}
+{#                    <div class="row align-items-center">#}
+{#                      <div class="col-auto">#}
+{#                        <span class="fe fe-inbox fe-24"></span>#}
+{#                      </div>#}
+{#                      <div class="col">#}
+{#                        <small><strong>Notifications have been sent</strong></small>#}
+{#                        <div class="my-0 text-muted small">Fusce dapibus, tellus ac cursus commodo</div>#}
+{#                        <small class="badge badge-pill badge-light text-muted">30m ago</small>#}
+{#                      </div>#}
+{#                    </div> <!-- / .row -->#}
+{#                  </div>#}
                     {% for request in manager_requests %}
                   <div class="list-group-item bg-transparent">
                     <div class="row align-items-center">

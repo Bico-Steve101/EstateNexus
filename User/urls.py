@@ -53,10 +53,15 @@ urlpatterns = [
                   path('schedule_message/<int:property_id>/', views.schedule_message, name='schedule_message'),
                   path('mark_all_messages_as_read/', views.mark_all_messages_as_read, name='mark_all_messages_as_read'),
 
-
+                  path('property/<int:property_id>/edit/', views.edit_property, name='edit_property'),
+                  path('property/<int:property_id>/delete/', views.delete_property, name='delete_property'),
 
                   # mpesa payemnt
-                  path('mpesa-payment/', views.mpesa_payment, name='mpesa_payment'),
-                  # path('check-payment-status/<str:invoice_id>/', views.check_payment_status,
-                  #      name='check_payment_status'),
+                  path('mpesa/payment/', views.mpesa_payment, name='mpesa_payment'),
+                  path('mpesa/callback/', views.mpesa_callback, name='mpesa_callback'),
+                  # path('mpesa/payment/status/', views.query_stk_push_status, name='mpesa_payment_status'),
+                  path('token/', views.getAccessToken, name='token'),
+
+                  path('api/property-data/', views.get_property_data, name='property_data'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

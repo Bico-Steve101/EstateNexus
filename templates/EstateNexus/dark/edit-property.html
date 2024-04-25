@@ -1,0 +1,540 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>EstateNexus Dashboard - The Property Manager</title>
+
+    <!-- Fonts -->
+    <!-- Icons. Uncomment required icon fonts -->
+    <link rel="stylesheet" href="{% static 'dark/assets/vendor/fonts/boxicons.css' %}" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="{% static 'dark/assets/vendor/css/core.css' %}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{% static 'dark/assets/vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{% static 'dark/assets/css/demo.css' %}" />
+
+    <!-- Vendors CSS -->
+    <script src="{% static 'dark/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}"></script>
+
+    <!-- Page CSS -->
+
+    <!-- Helpers -->
+    <script src="{% static 'dark/assets/vendor/js/helpers.js' %}"></script>
+
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="{% static 'dark/assets/js/config.js' %}"></script>
+
+
+    <!-- /////////////////////////////////////////////////////// -->
+
+    <!-- Simple bar CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/simplebar.css' %}">
+    <!-- Fonts CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+     href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+     rel="stylesheet"
+     />
+    <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/feather.css' %}">
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/daterangepicker.css' %}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{% static 'dark/css/app-light.css' %}" id="lightTheme" disabled>
+    <link rel="stylesheet" href="{% static 'dark/css/app-dark.css' %}" id="darkTheme">
+  </head>
+  <body class="vertical  dark  ">
+    <div class="wrapper">
+      <nav class="topnav navbar navbar-light">
+        <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+          <i class="fe fe-menu navbar-toggler-icon"></i>
+        </button>
+        <form class="form-inline mr-auto searchform text-muted">
+          <input class="form-control mr-sm-2 bg-transparent border-0 pl-4 text-muted" type="search" placeholder="Type something..." aria-label="Search">
+        </form>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="dark">
+              <i class="fe fe-sun fe-16"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-shortcut">
+              <span class="fe fe-grid fe-16"></span>
+            </a>
+          </li>
+          <li class="nav-item nav-notif">
+            <a class="nav-link text-muted my-2" href="./#" data-toggle="modal" data-target=".modal-notif">
+              <span class="fe fe-bell fe-16"></span>
+              <span class="dot dot-md bg-success"></span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="avatar avatar-sm mt-2">
+                <img src="{{user.avatar.url}}" alt="..." class="avatar-img rounded-circle">
+              </span>
+            </a>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_authenticated %}
+                {% if user.role == 'owner' %}
+                    <a href="{% url 'User:dashboard' %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'manager' %}
+                    <a href="{% url 'User:managers-profile' manager_id=user.manager.id %}" class="dropdown-item">Dashboard</a>
+                {% elif user.role == 'tenant' %}
+                    <a href="{% url 'User:tenant-profile' tenant_id=user.tenant.id %}" class="dropdown-item">Dashboard</a>
+                {% endif %}
+                <a href="{% url 'User:logout' %}" class="dropdown-item">Logout</a>
+                <a href="{% url 'User:update-password' %}" class="dropdown-item">Update Password</a>
+                {% else %}
+                <a href="{% url 'User:login' %}" class="dropdown-item">Login</a>
+                <a href="{% url 'User:signup' %}" class="dropdown-item">Signup</a>
+                 {% endif %}
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+        <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+          <i class="fe fe-x"><span class="sr-only"></span></i>
+        </a>
+        <nav class="vertnav navbar navbar-light">
+          <!-- nav bar -->
+          <div class="w-100 mb-4 d-flex">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'User:dashboard' %}">
+              <img src="{% static 'dark/images/home (2).png' %}" alt="estatenexus">
+            </a>
+          </div>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item dropdown">
+              <a href="#dashboard" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <i class="fe fe-pie-chart fe-16"></i>
+                <span class="ml-3 item-text">Dashboard</span><span class="sr-only">(current)</span>
+              </a>
+              <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
+                <li class="nav-item active">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard' %}"><span class="ml-1 item-text">Main</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link pl-3" href="{% url 'User:dashboard-sales' %}"><span class="ml-1 item-text">E-commerce</span></a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Details</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+{#            <li class="nav-item dropdown">#}
+{#              <a href="{% url 'User:payments' %}" aria-expanded="false" class="nav-link">#}
+{#                <i class="fe fe-dollar-sign fe-16"></i>#}
+{#                <span class="ml-3 item-text">Payments</span>#}
+{#                <span class="badge badge-pill badge-primary text-center mt-1">New</span>#}
+{#              </a>#}
+{#            </li>#}
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:managers' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-users fe-16"></i>
+                <span class="ml-3 item-text">Managers</span>
+              </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a href="{% url 'User:properties' %}" aria-expanded="false" class="nav-link">
+                <i class="fe fe-home fe-16"></i>
+                <span class="ml-3 item-text">Properties</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Apps</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:calendar' %}">
+                <i class="fe fe-calendar fe-16"></i>
+                <span class="ml-3 item-text">Calendar</span>
+              </a>
+            </li>
+          </ul>
+          <p class="text-muted nav-heading mt-4 mb-1">
+            <span>Documentation</span>
+          </p>
+          <ul class="navbar-nav flex-fill w-100 mb-2">
+            <li class="nav-item w-100">
+              <a class="nav-link" href="{% url 'User:getting-started' %}">
+                <i class="fe fe-help-circle fe-16"></i>
+                <span class="ml-3 item-text">Getting Start</span>
+              </a>
+            </li>
+          </ul>
+          <div class="btn-box w-100 mt-5 mb-1">
+            <a href="{% url 'User:logout' %}" target="_blank" class="btn mb-2 btn-primary btn-lg btn-block">
+              <i class="fe fe-power fe-12 mx-2"></i><span class="small">LogOut</span>
+            </a>
+          </div>
+        </nav>
+      </aside>
+      <main role="main" class="main-content">
+        <div class="content-wrapper">
+          <!-- Content -->
+
+          <div class="container-xxl flex-grow-1 container-p-y">
+            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Add Property /</span> Property</h4>
+
+            <div class="row">
+              <div class="col-md-12">
+                <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                  <li class="nav-item">
+                    <a class="nav-link active" href="javascript:void(0);"><i class="bx bx-home me-1"></i> Property</a>
+                  </li>
+                </ul>
+                <div class="card mb-4">
+                  <h5 class="card-header mb-4">Property Details</h5>
+                  <!-- Account -->
+                <form id="propertyForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card-body">
+                        <div class="d-flex align-items-start align-items-sm-center gap-4">
+                        <img
+                            src="{% static 'dark/assets/avatars/proerty-empty.jpg' %}"
+                            alt="user-avatar"
+                            class="d-block rounded"
+                            height="100"
+                            width="100"
+                            id="uploadedAvatar"
+                        />
+                        <div class="button-wrapper">
+                                <label for="id_photo" class="btn btn-primary me-2 mb-4" tabindex="0">
+                                    <span class="d-none d-sm-block">Upload new photo</span>
+                                    <i class="bx bx-upload d-block d-sm-none"></i>
+                                </label>
+                                 <input
+                                        type="file"
+                                        id="id_photo"
+                                        name="photo"
+                                        class="account-file-input"
+                                        hidden
+                                        accept="image/png, image/jpeg"
+                                    />
+                                <button type="button" class="btn btn-outline-secondary account-image-reset mb-4">
+                                    <i class="bx bx-reset d-block d-sm-none"></i>
+                                    <span class="d-none d-sm-block">Reset</span>
+                                </button>
+
+                                <p class="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of 800K</p>
+                        </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+                    <div class="card-body">
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_name" class="form-label">Name</label>
+                                    <input class="form-control" type="text" id="id_name" name="name" value="{{ property.name }}" autofocus>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_option" class="form-label">Option</label>
+                                    <select name="option" class="form-select" required="" data-value="{{ property.option }}" id="id_option">
+                                      <option value="" selected="">---------</option>
+
+                                      <option value="rent">Rent</option>
+
+                                      <option value="sale">Sale</option>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_email" class="form-label">E-mail</label>
+                                    <input class="form-control" type="email" id="id_email" name="email" value="{{ property.email }}" placeholder="runda.doe@example.com">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="id_description" placeholder="{{ property.description }}" name="description" rows="3" style="height: 3px;"></textarea>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label" for="id_phoneNumber">Phone Number</label>
+                                    <div class="input-group input-group-merge">
+                                        <span class="input-group-text">KE (+254)</span>
+                                        <input type="in" id="id_phoneNumber" name="phone_number" class="form-control" value="{{ property.phone_number }}"  placeholder="712 345 678">
+                                    </div>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_address" class="form-label">Address</label>
+                                    <input type="text" class="form-control" id="id_address" value="{{ property.address }}" name="address" placeholder="Address">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_county" class="form-label">County</label>
+                                    <input class="form-control" type="text" id="id_county" value="{{ property.county }}" name="county" placeholder="Kisumu">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_zipCode" class="form-label">Zip Code</label>
+                                    <input type="text" class="form-control" id="id_zipCode" value="{{ property.zip_code }}" name="zip_code" placeholder="000000" maxlength="6">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="form-label" for="id_country">Country</label>
+                                    <select id="id_country" class="form-select" data-value="{{ property.country }}" name="country">
+                                      <option value="" selected="">---------</option>
+
+                                        <option value="Burundi">Burundi</option>
+                                        <option value="Comoros">Comoros</option>
+                                        <option value="Djibouti">Djibouti</option>
+                                        <option value="Eritrea">Eritrea</option>
+                                        <option value="Ethiopia">Ethiopia</option>
+                                        <option value="Kenya">Kenya</option>
+                                        <option value="Madagascar">Madagascar</option>
+                                        <option value="Malawi">Malawi</option>
+                                        <option value="Mauritius">Mauritius</option>
+                                        <option value="Mozambique">Mozambique</option>
+                                        <option value="Rwanda">Rwanda</option>
+                                        <option value="Seychelles">Seychelles</option>
+                                        <option value="Somalia">Somalia</option>
+                                        <option value="South Sudan">South Sudan</option>
+                                        <option value="Tanzania">Tanzania</option>
+                                        <option value="Uganda">Uganda</option>
+                                        <option value="Zambia">Zambia</option>
+                                        <option value="Zimbabwe">Zimbabwe</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_type" class="form-label">Type</label>
+                                    <select name="type" required="" class="form-select" data-value="property.type" id="id_type">
+                                      <option value="" selected="">---------</option>
+
+                                      <option value="apartment">Apartment</option>
+
+                                      <option value="condominium">Condominium</option>
+
+                                      <option value="townhouse">Townhouse</option>
+
+                                      <option value="land">Land</option>
+
+                                      <option value="commercial_property">Commercial Property</option>
+
+                                      <option value="mobile_home">Mobile Home</option>
+
+                                      <option value="loft">Loft</option>
+
+                                      <option value="cottage">Cottage</option>
+
+                                      <option value="penthouse">Penthouse</option>
+
+                                      <option value="studio">Studio</option>
+
+                                      <option value="villa">Villa</option>
+
+                                      <option value="bungalow">Bungalow</option>
+
+                                      <option value="duplex">Duplex</option>
+
+                                      <option value="house">House</option>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_category" class="form-label">Category</label>
+                                    <select name="category" class="form-select" data-value="{{ property.category }}" required="" id="id_category">
+                                      <option value="" selected="">---------</option>
+
+                                      <option value="residential">Residential</option>
+
+                                      <option value="commercial">Commercial</option>
+
+                                      <option value="industrial">Industrial</option>
+
+                                      <option value="vocational_renting">Vocational Renting</option>
+
+                                      <option value="land">Land</option>
+
+                                      <option value="mixed_use">Mixed Use</option>
+
+                                      <option value="retail">Retail</option>
+
+                                      <option value="office">Office</option>
+
+                                      <option value="warehouse">Warehouse</option>
+
+                                      <option value="hospitality">Hospitality</option>
+
+                                      <option value="special_purpose">Special Purpose</option>
+
+                                      <option value="agricultural">Agricultural</option>
+
+                                      <option value="other">Other</option>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_zoning" class="form-label">Zoning</label>
+                                    <select name="zoning" class="form-select" property="{{ property.zoning }}" required="" id="id_zoning">
+                                      <option value="" selected="">---------</option>
+
+                                      <option value="residential">Residential</option>
+
+                                      <option value="commercial">Commercial</option>
+
+                                      <option value="industrial">Industrial</option>
+
+                                      <option value="mixed_use">Mixed Use</option>
+
+                                      <option value="agricultural">Agricultural</option>
+
+                                      <option value="historical_preservation">Historical Preservation</option>
+
+                                      <option value="open_space">Open Space</option>
+
+                                      <option value="recreational">Recreational</option>
+
+                                      <option value="special_use">Special Use</option>
+
+                                      <option value="variances">Variances</option>
+
+                                      <option value="overlay_zoning">Overlay Zoning</option>
+
+                                      <option value="cluster_zoning">Cluster Zoning</option>
+
+                                      <option value="conservation_zoning">Conservation Zoning</option>
+
+                                      <option value="planned_unit_development">Planned Unit Development</option>
+
+                                      <option value="transition_oriented_development">Transition Oriented Development</option>
+
+                                      <option value="urban_renewal">Urban Renewal</option>
+
+                                      <option value="waterfront_zoning">Waterfront Zoning</option>
+
+                                      <option value="other">Other</option>
+
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_size" class="form-label">Size</label>
+                                    <input type="text" class="form-control" id="id_size" value="{{ property.size }}" name="size" placeholder="100" maxlength="6">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_special_feature" class="form-label">Special Feature</label>
+                                    <input type="text" class="form-control" id="id_special_feature" name="special_feature" value="{{ property.special_feature }}" placeholder="Pool, Lake View" maxlength="255">
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_price" class="form-label">Price</label>
+                                    <input type="text" class="form-control" id="id_price" name="price" value="{{ property.price }}" placeholder="1000" maxlength="10">
+                                </div>
+                                 <div class="mb-3 col-md-6">
+                                    <label class="form-label" for="id_company">Company:</label>
+                                    <input type="text" class="form-control" name="company" maxlength="255" value="{{ property.company }}" required="" id="id_company">
+                                </div>
+                                <!-- Add other fields here according to your models.py -->
+                            </div>
+                            <div class="mt-2">
+                                <button type="submit" value="Save" class="btn btn-primary me-2" name="_save">Save Property</button>
+                                <input type="submit" value="Save and add another" class="btn btn-primary me-2" name="_addanother">
+                                <input type="submit" value="Save and continue editing" class="btn btn-primary me-2" name="_continue">
+                                <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                            </div>
+                        {% if form.errors %}
+                    <div class="mb-3 col-12 mb-0">
+                      <div class="alert alert-warning">
+                        <h6 class="alert-heading fw-bold mb-1">Please correct the following errors:</h6>
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                          <p class="mb-0">{{ field|capfirst }}: {{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                      </div>
+                    </div>
+                        {% endif %}
+                    </div>
+                </form>
+                  <!-- /Account -->
+                </div>
+                    {% if request.user == property.owner %}
+                <div class="card">
+                  <h5 class="card-header mb-4">Delete Account</h5>
+                  <div class="card-body">
+                    <div class="mb-3 col-12 mb-0">
+                      <div class="alert alert-warning">
+                        <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete "{{ object.name }}"?</h6>
+                        <p class="mb-0">Once you delete your property, there is no going back. Please be certain.</p>
+                      </div>
+                    </div>
+                    <form id="formAccountDeactivation"  method="post" action="{% url 'User:delete_property' property.id %}">
+                        {% csrf_token %}
+                        <div class="form-check  mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          name="accountActivation"
+                          id="accountActivation"
+                        />
+                        <label class="form-check-label mt-1" for="accountActivation"
+                          >I confirm my property deletion</label
+                        >
+                      </div>
+                      <button type="submit" class="btn btn-danger deactivate-account">Delete Property</button>
+                    </form>
+                      {% else %}
+                            <br/>
+                          <p>You are not authorized to delete this property.</p>
+                  </div>
+                </div>
+                    {% endif %}
+              </div>
+            </div>
+          </div>
+          <!-- / Content -->
+
+          <div class="content-backdrop fade"></div>
+        </div>
+      </main> <!-- main -->
+    </div> <!-- .wrapper -->
+
+    <script src="{% static 'dark/assets/js/pages-account-settings-account.js' %}"></script>
+    <script src="{% static 'dark/assets/vendor/js/bootstrap.js' %}"></script>
+    <script src="{% static 'dark/assets/vendor/libs/jquery/jquery.js' %}"></script>
+    <script src="{% static 'dark/assets/vendor/libs/popper/popper.js' %}"></script>
+
+    <script src="{% static 'dark/js/jquery.min.js' %}"></script>
+    <script src="{% static 'dark/js/popper.min.js' %}"></script>
+    <script src="{% static 'dark/js/moment.min.js' %}"></script>
+    <script src="{% static 'dark/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'dark/js/simplebar.min.js' %}"></script>
+    <script src='{% static 'dark/js/daterangepicker.js' %}'></script>
+    <script src='{% static 'dark/js/jquery.stickOnScroll.js' %}'></script>
+    <script src="{% static 'dark/js/tinycolor-min.js' %}"></script>
+    <script src="{% static 'dark/js/config.js' %}"></script>
+    <script src="{% static 'dark/js/d3.min.js' %}"></script>
+    <script src="{% static 'dark/js/topojson.min.js' %}"></script>
+    <script src="{% static 'dark/js/datamaps.all.min.js' %}"></script>
+    <script src="{% static 'dark/js/datamaps-zoomto.js' %}"></script>
+    <script src="{% static 'dark/js/datamaps.custom.js' %}"></script>
+    <script src="{% static 'dark/js/Chart.min.js' %}"></script>
+    <script>
+      /* defind global options */
+      Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
+      Chart.defaults.global.defaultFontColor = colors.mutedColor;
+    </script>
+    <script src="{% static 'dark/js/gauge.min.js' %}"></script>
+    <script src="{% static 'dark/js/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'dark/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'dark/js/apexcharts.custom.js' %}"></script>
+    <script src="{% static 'dark/js/apps.js' %}"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56159088-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag()
+      {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'UA-56159088-1');
+    </script>
+  </body>
+</html>

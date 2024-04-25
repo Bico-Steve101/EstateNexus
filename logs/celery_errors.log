@@ -1,0 +1,9 @@
+Failed to send message to tenant 1: HTTP 401 error: Unable to create record: Authenticate
+Failed to send message to tenant 1: HTTP 400 error: Unable to create record: Invalid 'To' Phone Number: 075783XXXX
+Failed to send message to tenant 1: HTTP 400 error: Unable to create record: Invalid 'To' Phone Number: 075783XXXX
+Failed to send message to tenant 1: HTTP 400 error: Unable to create record: Invalid 'To' Phone Number: 075783XXXX
+Failed to send message to tenant 1: HTTP 400 error: Unable to create record: Invalid 'To' Phone Number: 075783XXXX
+Failed to send message to tenant 1: HTTP 400 error: Unable to create record: Invalid 'To' Phone Number: 075783XXXX
+Tenant not found with ID: None
+Tenant not found with ID: 6
+Tenant not found with ID: 6

@@ -189,11 +189,11 @@
                     {{ form.amount.errors }}
                     <button class="w-users-userformbutton button-primary w-button text-light" type="submit">Submit</button>
                   </form>
-                    {%  if messages %}
+                    {%  if msg %}
                     <div class="w-users error-state">
                         <div class="user-form-error-msg">
                             We're having trouble completing your payments. Please try again, or contact us if you continue to have problems.
-                              {% for message in messages %}
+                              {% for message in msg %}
                             <p style="color: red;">{{ message }}</p>
                             <p{% if message.tags %} class="{{ message.tags }}"{% endif %}></p>
                               {% endfor %}
